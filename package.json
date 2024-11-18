@@ -23,7 +23,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "node start.js"
+    "test": "node validate.js"
   },
   "repository": {
     "type": "git",
