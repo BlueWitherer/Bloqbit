@@ -1,0 +1,42 @@
+{
+    "icons": {
+        "eball": "🎱",
+        "check": "✅",
+        "xmark": "❌",
+        "info": "ℹ️",
+        "exclamation": "❗",
+        "question": "❓",
+        "entry": "⭕",
+        "noentry": "🚫",
+        "update": "🔄",
+        "plus": "➕",
+        "minus": "➖",
+        "dollar": "💰",
+        "coin": {
+            "heads": "<:ico:848176412317712384>",
+            "tails": "<:ico:848176411734048799>"
+        }
+    },
+    "colors": {
+        "primary": 41983,
+        "secondary": 16711680,
+        "terciary": 126,
+        "strings": {
+            "primary": "#00A3FF",
+            "secondary": "#FAFAFA",
+            "terciary": "00007E"
+        }
+    },
+    "owner": {
+        "id": "358673524661157897"
+    },
+    "social": {
+        "company": {
+            "youtube": "https://www.youtube.com/c/CubicCommunity/",
+            "bluesky": "https://bsky.app/profile/cubicstudios.xyz/"
+        },
+        "bot": {
+            "bluesky": "https://bsky.app/profile/bloqbit.cubicstudios.xyz/"
+        }
+    }
+}

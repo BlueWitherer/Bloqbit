@@ -1,0 +1,209 @@
+{
+    "server": "",
+    "active": false,
+    "activeCode": "",
+    "activeExpiry": 1,
+    "customActive": false,
+    "customBotToken": "",
+    "roles": {
+        "immune": [],
+        "pingFree": [],
+        "blacklist": "",
+        "mute": "",
+        "member": ""
+    },
+    "welcome": {
+        "enabled": false,
+        "webhookEnabled": false,
+        "channel": "",
+        "webhook": "",
+        "message": {
+            "content": ""
+        }
+    },
+    "automod": {
+        "enabled": false,
+        "verification": {
+            "enabled": false,
+            "channel": "",
+            "logs": ""
+        },
+        "swearFilter": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "punishment": 0,
+            "keywords": [],
+            "superkeywords": [],
+            "logs": ""
+        },
+        "linkFilter": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "punishment": 0,
+            "keywords": [],
+            "logs": ""
+        },
+        "inviteFilter": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "punishment": 0,
+            "keywords": [],
+            "keywordsSuper": [],
+            "logs": ""
+        },
+        "dupetextFilter": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "punishment": 0,
+            "keywords": [],
+            "logs": ""
+        },
+        "massmentionFilter": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "untilPunish": 0,
+            "punishment": 0,
+            "keywords": [],
+            "logs": ""
+        },
+        "nicknameFilter": {
+            "enabled": false,
+            "roles": [],
+            "permFilterMode": 0,
+            "logs": ""
+        },
+        "antispam": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0,
+            "permFilterMode": 0,
+            "untilPunish": 0,
+            "punishment": 0,
+            "keywords": [],
+            "logs": ""
+        },
+        "antiraid": {
+            "text": {
+                "enabled": false,
+                "roles": [],
+                "channels": [],
+                "permFilterMode": 0,
+                "keywords": [],
+                "untilLock": 0,
+                "timeThreshold": 0
+            },
+            "alts": {
+                "enabled": false,
+                "punishment": 0,
+                "untilPunish": 0,
+                "timeThreshold": 0
+            },
+            "logs": ""
+        },
+        "antialt": {
+            "enabled": false,
+            "timeThreshold": 0,
+            "punishment": 0,
+            "logs": ""
+        },
+        "antichain": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "permFilterMode": 0,
+            "untilPunish": 0,
+            "punishment": 0,
+            "logs": ""
+        },
+        "antiping": {
+            "enabled": false,
+            "roles": [],
+            "channels": [],
+            "permFilterMode": 0,
+            "inChatCooldown": 0,
+            "preWarnings": {
+                "untilPunish": 0
+            },
+            "punishment": 0,
+            "logs": ""
+        }
+    },
+    "logs": {
+        "enabled": false,
+        "webhookEnabled": false,
+        "channel": "",
+        "webhook": "",
+        "inbox": "",
+        "actions": {
+            "autoMod": true,
+            "moderator": true,
+            "invites": false,
+            "ban": false,
+            "kick": false,
+            "join": false,
+            "leave": false,
+            "nickname": false,
+            "timeout": false,
+            "msgDel": false,
+            "msgUpd": false,
+            "msgPin": false,
+            "msgBulkDel": false,
+            "remAllReact": false,
+            "rolesAdd": false,
+            "rolesRem": false,
+            "rolesAssign": false,
+            "rolesUnassign": false,
+            "serverUpd": false,
+            "channelDel": false,
+            "channelUpd": false,
+            "channelAdd": false
+        }
+    },
+    "leveling": {
+        "enabled": true,
+        "chat": {
+            "min": 1,
+            "max": 25,
+            "roles": [],
+            "channels": [],
+            "filterMode": 0
+        },
+        "levelMax": 100,
+        "levelRewarding": true
+    },
+    "economy": {
+        "enabled": false,
+        "currency": {
+            "name": "Cash",
+            "namePlural": "Cash",
+            "symbol": "$",
+            "image": ""
+        },
+        "gambling": {
+            "enabled": false,
+            "min": 5,
+            "max": 100
+        },
+        "drops": {
+            "enabled": true,
+            "channels": [],
+            "filterMode": 1
+        }
+    }
+}

@@ -1,0 +1,23 @@
+# Handle line endings automatically for different operating systems
+* text=auto
+
+# Mark all markdown files as text
+*.md text
+
+# Treat all images as binary files to avoid merge conflicts
+*.jpg binary
+*.png binary
+*.gif binary
+
+# Specify custom diff driver for certain file types
+*.docx diff=word
+
+# Prevent some files from being diffed or merged
+*.min.js -diff
+*.min.css -diff
+
+# Specify merge strategies for certain files
+*.lock merge=ours
+
+# Handle UTF-16 encoding
+*.txt text working-tree-encoding=UTF-16

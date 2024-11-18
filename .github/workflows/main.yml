@@ -1,0 +1,30 @@
+name: Bloqbit Login Check
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '23.1.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate Bloqbit login process
+        env:
+          PUBLIC_TOKEN: ${{ secrets.PUBLIC_TOKEN }}
+          PUBLIC_SECRET: ${{ secrets.PUBLIC_SECRET }}
+          TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
+          TEST_SECRET: ${{ secrets.TEST_SECRET }}
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          AI_TOKEN: ${{ secrets.AI_TOKEN }}
+          LOG_WH: ${{ secrets.LOG_WH }}
+        run: node validate.js
