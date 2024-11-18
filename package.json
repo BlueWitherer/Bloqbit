@@ -13,12 +13,16 @@
   },
   "main": "start.js",
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
     "@types/mysql": "^2.15.26",
     "@types/node": "^22.5.1",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
   "scripts": {
+    "lint": "eslint .",
     "test": "node start.js"
   },
   "repository": {

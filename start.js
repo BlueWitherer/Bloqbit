@@ -2,7 +2,7 @@ process.on('uncaughtException', (err) => {
     console.error('Unhandled Exception:', err);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Rejection:', reason);
 });
 
