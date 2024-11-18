@@ -39,19 +39,19 @@ module.exports = {
             });
         };
 
-        return interaction.guild?.members?.ban(User?.id, {
+        return await interaction.guild?.members?.ban(User?.id, {
             deleteMessageSeconds: 7 * 86400,
             reason: `${interaction.user?.username} | Softban - ${banreason}`
-        }).then(() => {
-            interaction.guild?.members?.unban(User?.id, `${interaction.user?.username} | Softban - ${banreason}`);
-        }).catch((err) => {
-            interaction.reply({
+        }).then(async () => {
+            await interaction.guild?.members?.unban(User?.id, `${interaction.user?.username} | Softban - ${banreason}`);
+        }).catch(async (err) => {
+            await interaction.reply({
                 "content": `> ${assets.icons.xmark} | **${interaction.user?.username}** - An error occurred.`,
                 "ephemeral": true,
             });
             console.log(err);
-        }).then(() => {
-            interaction.reply({
+        }).then(async () => {
+            await interaction.reply({
                 "content": "",
                 "embeds": [
                     {
@@ -81,8 +81,8 @@ module.exports = {
                     },
                 ],
             });
-        }).then(() => {
-            User?.send({
+        }).then(async () => {
+            await User?.send({
                 "content": "",
                 "embeds": [
                     {
@@ -90,8 +90,8 @@ module.exports = {
                             "name": `${User.username}`,
                             "icon_url": `${User.displayAvatarURL({ "forceStatic": false, size: 1024 })}`
                         },
-                        "title": `${assets.icons.noentry} | Kicked`,
-                        "description": `Our community moderators have determined that your behavior on CS has been in violation of our rules.`,
+                        "title": `${assets.icons.noentry} | Soft-banned`,
+                        "description": `You were __soft-banned__ from **${interaction.guild?.name}**.`,
                         "color": assets.colors.primary,
                         "fields": [
                             {
@@ -110,9 +110,6 @@ module.exports = {
                                 "inline": true,
                             },
                         ],
-                        "footer": {
-                            "text": `Please abide by our rules to keep our community friendly to everyone.`,
-                        },
                     },
                 ],
             }).catch(() => {

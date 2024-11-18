@@ -92,7 +92,7 @@ module.exports = {
                                 "icon_url": `${User.displayAvatarURL({ "forceStatic": false, size: 1024 })}`
                             },
                             "title": `${assets.icons.noentry} | Banned`,
-                            "description": `Our community moderators have determined that your behavior on CS has been in violation of our rules.`,
+                            "description": `You were __banned__ from **${interaction.guild?.name}**.`,
                             "color": assets.colors.primary,
                             "fields": [
                                 {
@@ -105,15 +105,7 @@ module.exports = {
                                     "value": `<t:${new Date().getDate() / 1000}:F>`,
                                     "inline": false,
                                 },
-                                {
-                                    "name": `Appeal`,
-                                    "value": `If this was an unfair punishment, make sure to [appeal](https://discord.gg/GuApKZGgRd).`,
-                                    "inline": true,
-                                },
                             ],
-                            "footer": {
-                                "text": `Please abide by our rules to keep our community friendly to everyone.`,
-                            },
                         },
                     ],
                 });

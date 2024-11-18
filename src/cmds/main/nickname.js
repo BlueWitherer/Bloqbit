@@ -126,6 +126,9 @@ module.exports = {
             });
         } else if (interaction.options?.getSubcommand() === "view") {
             const user = interaction.options?.getUser("user");
+
+            // TODO: Fetch all info from database
+
             let mod;
             let displayed;
             let reason;

@@ -126,6 +126,8 @@ module.exports = {
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
+        // TODO: Allow for saving logging event settings
+
         return await interaction.reply({
             "content": "Command is W.I.P.!",
             "ephemeral": true,

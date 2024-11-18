@@ -68,7 +68,7 @@ module.exports = {
                         "fields": [
                             {
                                 "name": "User",
-                                "value": `**${bannedUser}**`,
+                                "value": `**${bannedUser?.username}**`,
                                 "inline": true,
                             },
                             {

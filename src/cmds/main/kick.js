@@ -39,14 +39,14 @@ module.exports = {
             });
         };
 
-        return interaction.guild?.members?.kick(User.id, `${interaction.user?.username} | Kick - ${kickreason}`).catch((err) => {
-            interaction.reply({
+        return interaction.guild?.members?.kick(User.id, `${interaction.user?.username} | Kick - ${kickreason}`).catch(async (err) => {
+            await interaction.reply({
                 "content": `> ${assets.icons.xmark} | **${interaction.user?.username}** - An error occurred.`,
                 "ephemeral": true,
             });
             console.log(err);
-        }).then(() => {
-            interaction.reply({
+        }).then(async () => {
+            await interaction.reply({
                 "content": null,
                 "embeds": [
                     {
@@ -76,8 +76,8 @@ module.exports = {
                     },
                 ],
             });
-        }).then(() => {
-            User.send({
+        }).then(async () => {
+            await User.send({
                 "content": null,
                 "embeds": [
                     {
@@ -86,7 +86,7 @@ module.exports = {
                             "icon_url": `${User.displayAvatarURL({ "forceStatic": false, size: 1024 })}`
                         },
                         "title": `${assets.icons.noentry} | Kicked`,
-                        "description": `Our community moderators have determined that your behavior on CS has been in violation of our rules.`,
+                        "description": `You were __kicked__ from **${interaction.guild?.name}**.`,
                         "color": assets.colors.primary,
                         "fields": [
                             {
@@ -105,9 +105,6 @@ module.exports = {
                                 "inline": true,
                             },
                         ],
-                        "footer": {
-                            "text": `Please abide by our rules to keep our community friendly to everyone.`,
-                        },
                     },
                 ],
             }).catch(() => {

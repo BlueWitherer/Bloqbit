@@ -331,6 +331,8 @@ module.exports = {
             const filterMode = interaction.options?.getNumber("filter_mode");
             const permissionFilterMode = interaction.options?.getNumber("permission_filter_mode");
 
+            // TODO: Convert ALL mysql into MongoDB
+
             await connection.query("UPDATE `automodBL` SET `enabled`=" + result_toggle + " WHERE `id`='" + interaction.guild?.id + "';", [], async (error, results, fields) => {
                 if (error) {
                     console.error(error);
