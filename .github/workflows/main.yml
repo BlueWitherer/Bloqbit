@@ -19,7 +19,7 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm eslint
+        run: npm run lint
 
       - name: Validate Bloqbit login process
         env:
@@ -30,4 +30,4 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           AI_TOKEN: ${{ secrets.AI_TOKEN }}
           LOG_WH: ${{ secrets.LOG_WH }}
-        run: node validate.js
+        run: npm run test
