@@ -1,5 +1,4 @@
-const ClientModel = require("./classes/ClientModel.js");
-const BotDatabase = require("./classes/Database.js");
+const { ClientModel, BotDatabase } = require("./classes.js");
 
 const Discord = require("discord.js");
 const { Routes } = require("discord-api-types/v9");

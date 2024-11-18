@@ -76,4 +76,6 @@ module.exports = {
         console.debug(`[...] Creating new settings object...`);
         return JSON.parse(JSON.stringify(SysSettings));
     },
+
+    SysSettings,
 };

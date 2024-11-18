@@ -1,6 +1,6 @@
 const SysAssets = require("../../assets.json");
 const SysSettings = require("../../settings.json");
-const BotDatabase = require("../../classes/Database.js");
+const { BotDatabase } = require("../../classes.js");
 const { ChatInputCommandInteraction } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');

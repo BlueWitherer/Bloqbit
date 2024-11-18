@@ -12,7 +12,7 @@ const BotDatabase = require("./Database");
 dotenv.config();
 
 /**
- * @class
+ * @class Bot model.
  */
 class ClientModel {
     constructor() {

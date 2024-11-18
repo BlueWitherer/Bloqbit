@@ -1,6 +1,6 @@
 {
   "name": "bloqbit",
-  "version": "v1.0.0",
+  "version": "1.0.0",
   "description": "The all-in-one solution for your Discord server.",
   "dependencies": {
     "discord.js": "^14.16.3",
@@ -26,9 +26,12 @@
     "url": "https://www.github.com/CubicCommunity/Bloqbit/"
   },
   "keywords": [
+    "bloqbit",
     "utility",
     "moderation",
-    "fun"
+    "fun",
+    "discord",
+    "bot"
   ],
   "author": "Cubic Studios",
   "license": "ISC",

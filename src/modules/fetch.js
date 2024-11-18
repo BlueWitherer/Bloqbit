@@ -1,7 +1,6 @@
 const cacheModule = require("../cache.js");
 
-const ClientModel = require("../classes/ClientModel.js");
-const BotDatabase = require("../classes/Database.js");
+const { BotDatabase } = require("../classes.js");
 
 const { Interaction } = require("discord.js");
 const Mongo = require("mongodb");
