@@ -1,3 +1,5 @@
+const { MongoClient } = require("mongodb");
+const { BotDatabase } = require("./classes");
 const SysSettings = require("./settings.json");
 
 /**
@@ -36,32 +38,45 @@ module.exports = {
 
     /**
      * 
-     * @param {typeof SysSettings} obj Object for query
+     * @param {typeof SysSettings} system Object for query
+     * @param {BotDatabase} db Bot database model
      * 
-     * @returns {typeof SysSettings | void} New settings object
+     * @returns {Promise<typeof SysSettings | void>} New settings object
      */
-    update: (obj) => {
-        if (obj) {
-            console.debug(`[I] Looking if object for server ${obj.server} already exists...`);
+    update: async (system, db) => {
+        if (system) {
+            try {
+                console.debug(`[I] Looking if object for server ${system.server} already exists...`);
 
-            const foundObj = cache.findIndex((so) => {
-                console.debug(`[...] Comparing cached object ${so.server} with query object ${obj.server}...`);
-                return obj.server === so.server;
-            });
+                const foundObj = cache.findIndex((so) => {
+                    console.debug(`[...] Comparing cached object ${so.server} with query object ${system.server}...`);
+                    return system.server === so.server;
+                });
 
-            if (foundObj >= 0) {
-                console.warn(`[II] Settings object for server ${obj.server} exists at index ${foundObj}, replacing...`);
+                if (foundObj >= 0) {
+                    console.warn(`[II] Settings object for server ${system.server} exists at index ${foundObj}, replacing...`);
 
-                cache[foundObj] = obj;
-                console.debug(`[O] Data for server ${cache[foundObj].server} updated.`);
-            } else {
-                console.info(`[II] Settings object for ${obj.server} not found, creating new object...`);
+                    cache[foundObj] = system;
+                    console.debug(`[O] Data for server ${cache[foundObj].server} updated.`);
+                } else {
+                    console.info(`[II] Settings object for ${system.server} not found, creating new object...`);
 
-                const newSize = cache.push(obj);
-                console.debug(`[O] Data for server ${obj.server} updated. Cache size ${newSize}.`);
+                    const newSize = cache.push(system);
+                    console.debug(`[O] Data for server ${system.server} updated. Cache size ${newSize}.`);
+                };
+
+                const dbClient = new MongoClient(db.mongo_uri);
+
+                const database = dbClient.db("Bloqbit");
+                const collection = database.collection("servers");
+
+                await collection.updateOne({ server: system.server }, system);
+
+                return system;
+            } catch (err) {
+                console.error(err);
+                return;
             };
-
-            return obj;
         } else {
             console.error(`[X] Query object not provided.`);
             return;

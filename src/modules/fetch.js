@@ -108,16 +108,29 @@ module.exports = {
         if (interaction && assets) {
             try {
                 if (interaction.isChatInputCommand()) {
-                    return await interaction.reply({
-                        "content": null,
-                        "embeds": [
-                            {
-                                "title": `${assets.icons.xmark} | Command Error`,
-                                "description": `Due to an internal error, this command could not be fetched, or has not been properly executed. We apologize.`,
-                                "color": assets.colors.secondary,
-                            },
-                        ],
-                    });
+                    if (interaction.replied) {
+                        return await interaction.followUp({
+                            "content": null,
+                            "embeds": [
+                                {
+                                    "title": `${assets.icons.xmark} | Command Error`,
+                                    "description": `Due to an internal error, this command could not be fetched, or has not been properly executed. We apologize.`,
+                                    "color": assets.colors.secondary,
+                                },
+                            ],
+                        });
+                    } else {
+                        return await interaction.reply({
+                            "content": null,
+                            "embeds": [
+                                {
+                                    "title": `${assets.icons.xmark} | Command Error`,
+                                    "description": `Due to an internal error, this command could not be fetched, or has not been properly executed. We apologize.`,
+                                    "color": assets.colors.secondary,
+                                },
+                            ],
+                        });
+                    }
                 } else {
                     return null;
                 };

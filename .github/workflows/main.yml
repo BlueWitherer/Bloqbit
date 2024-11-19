@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run ESLint
+      - name: Check syntax
         run: npm run lint
 
       - name: Validate Bloqbit login process

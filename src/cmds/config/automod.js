@@ -4,9 +4,9 @@ const { BotDatabase } = require("../../classes.js");
 const { ChatInputCommandInteraction } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
-const mysql = require("mysql");
 const fetch = require("../../modules/fetch.js");
 const resolve = require("../../modules/resolve.js");
+const cache = require("../../cache.js");
 
 module.exports = {
     premium: true,
@@ -292,32 +292,44 @@ module.exports = {
      */
     execute: async (interaction, assets, system, db) => {
         const subCmd = interaction.options?.getSubcommand(true);
-        const connection = await mysql.createConnection(db.uri);
 
-        const toggleCmd = async (connection) => {
-            const toggle = interaction.options?.getBoolean("enabled", true);
-            const result_toggle = resolve.numberBool(toggle);
-
-            await connection.query("UPDATE `servers` SET `moduleAutomod`=" + result_toggle + " WHERE `id`=" + interaction.guild?.id + ";", [], async (error, results, fields) => {
-                if (error) {
-                    await fetch.databaseErrorResponse(interaction, assets);
-                } else {
-                    await interaction.reply({
-                        content: "",
-                        embeds: [
-                            {
-                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully configured Auto-moderator status.`,
-                                "color": assets.colors.primary,
-                            },
-                        ],
-                    });
-                };
-            });
-
-            await fetch.closeConnect(connection);
+        /**
+         * 
+         * @param {boolean} bool Boolean
+         * 
+         * @returns {string} "enabled" or "disabled"
+         */
+        const abled = (bool) => {
+            if (bool) {
+                return "enabled";
+            } else {
+                return "disabled";
+            };
         };
 
-        const swearsCmd = async (connection) => {
+        const toggleCmd = async () => {
+            const toggle = interaction.options?.getBoolean("enabled", true);
+
+            system.automod.enabled = toggle;
+
+            const update = await cache.update(system);
+
+            if (update) {
+                await interaction.reply({
+                    "content": "",
+                    "embeds": [
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
+                            "color": assets.colors.primary,
+                        },
+                    ],
+                });
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
+            };
+        };
+
+        const swearsCmd = async () => {
             const toggle = interaction.options?.getBoolean("enable", true);
             const result_toggle = resolve.numberBool(toggle);
 
@@ -331,135 +343,103 @@ module.exports = {
             const filterMode = interaction.options?.getNumber("filter_mode");
             const permissionFilterMode = interaction.options?.getNumber("permission_filter_mode");
 
-            // TODO: Convert ALL mysql into MongoDB
+            if (filter && filter !== null) {
+                const list = filter.split(",");
 
-            await connection.query("UPDATE `automodBL` SET `enabled`=" + result_toggle + " WHERE `id`='" + interaction.guild?.id + "';", [], async (error, results, fields) => {
-                if (error) {
-                    console.error(error);
-                    await fetch.commandErrorResponse(interaction, assets);
-                };
-            });
+                list.forEach((w) => system.automod.swearFilter.keywords.push(w.replace(/\s+/g, ' ').trim()));
 
-            if (filter !== null) {
-                const filtered = filter.match(/[^,\s][^,]*[^,\s]*/g);
+                const update = await cache.update(system);
 
-                try {
-                    await connection.query("SELECT * FROM `automodBL` WHERE `id`='" + interaction.guild?.id + "';", [], async (error, results, fields) => {
-                        if (error) {
-                            console.error(error);
-                            await fetch.databaseErrorResponse(interaction, assets);
-                        } else {
-                            var resultFound = results.find((r) => string(r.id) === interaction.guild?.id);
-
-                            if (resultFound?.keywords) {
-                                const alreadyArray = resolve.parseJson(resultFound.keywords);
-
-                                for (const val in filtered) {
-                                    alreadyArray.push(val);
-                                };
-
-                                const exported = resolve.stringJson(filtered);
-
-                                await connection.query("UPDATE `automodBL` SET `keywords`=" + exported + " WHERE `id`='" + interaction.guild?.id + "';", [], async (error, results, fields) => {
-                                    if (error) {
-                                        console.error(error);
-                                        await fetch.commandErrorResponse(interaction, assets);
-                                    } else {
-                                        await interaction.reply({
-                                            content: null,
-                                            embeds: [
-                                                {
-                                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully configured Auto-moderator keyword blacklist filter.`,
-                                                    "color": assets.colors.primary,
-                                                },
-                                            ],
-                                        });
-                                    };
-                                });
-                            } else {
-                                const exported = resolve.stringJson(filtered);
-
-                                await connection.query("INSERT INTO `automodBL`(`id`, `keywords`) VALUES('" + interaction.guild?.id + "', '" + exported + "');", [], async (error, results, fields) => {
-                                    if (error) {
-                                        console.error(error);
-                                        await fetch.commandErrorResponse(interaction, assets);
-                                    } else {
-                                        await interaction.reply({
-                                            content: null,
-                                            embeds: [
-                                                {
-                                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully configured Auto-moderator keyword blacklist filter.`,
-                                                    "color": assets.colors.primary,
-                                                },
-                                            ],
-                                        });
-                                    };
-                                });
-                            };
-                        };
-                    });
-                } catch (err) {
-                    console.error(err);
+                if (update) {
+                    if (interaction.replied) {
+                        await interaction.followUp({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the swear filter.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    } else {
+                        await interaction.reply({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the swear filter.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    };
+                } else {
                     await fetch.commandErrorResponse(interaction, assets);
                 };
             };
 
-            if (channel !== null) {
-                const filtered = [channel.id];
+            if (channel && channel !== null) {
+                const foundChannel = system.automod.swearFilter.channels.findIndex((c) => c === channel.id);
 
-                try {
-                    await connection.query("SELECT * FROM `automodBL` WHERE `id`=" + interaction.guild?.id + ";", [], async (error, results, fields) => {
-                        if (error) {
-                            console.error(error);
-                            await fetch.databaseErrorResponse(interaction, assets);
+                if (foundChannel >= 0) {
+                    system.automod.swearFilter.channels.splice(foundChannel, 1);
+
+                    const update = await cache.update(system);
+
+                    if (update) {
+                        if (interaction.replied) {
+                            await interaction.followUp({
+                                "content": "",
+                                "embeds": [
+                                    {
+                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the swear filter.`,
+                                        "color": assets.colors.primary,
+                                    },
+                                ],
+                            });
                         } else {
-                            var resultFound = results.find((r) => string(r.id) === interaction.guild?.id);
-
-                            if (resultFound?.channels) {
-                                const alreadyArray = resolve.parseJson(resultFound.channels);
-                                const exported = resolve.stringJson(resolve.removeArrayItem(alreadyArray, channel.id));
-
-                                await connection.query("UPDATE `automodBL` SET `channels`=" + exported + " WHERE `id`='" + interaction.guild?.id + "';", [], async (error, results, fields) => {
-                                    if (error) {
-                                        console.error(error);
-                                        await fetch.commandErrorResponse(interaction, assets);
-                                    } else {
-                                        await interaction.reply({
-                                            content: null,
-                                            embeds: [
-                                                {
-                                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully configured Auto-moderator channel filter.`,
-                                                    "color": assets.colors.primary,
-                                                },
-                                            ],
-                                        });
-                                    };
-                                });
-                            } else {
-                                const exported = resolve.stringJson(filtered);
-
-                                await connection.query("INSERT INTO `automodBL`(`id`, `channels`) VALUES('" + interaction.guild?.id + "', '" + exported + "');", [], async (error, results, fields) => {
-                                    if (error) {
-                                        console.error(error);
-                                        await fetch.commandErrorResponse(interaction, assets);
-                                    } else {
-                                        await interaction.reply({
-                                            content: null,
-                                            embeds: [
-                                                {
-                                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully configured Auto-moderator channel filter.`,
-                                                    "color": assets.colors.primary,
-                                                },
-                                            ],
-                                        });
-                                    };
-                                });
-                            };
+                            await interaction.reply({
+                                "content": "",
+                                "embeds": [
+                                    {
+                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the swear filter.`,
+                                        "color": assets.colors.primary,
+                                    },
+                                ],
+                            });
                         };
-                    });
-                } catch (err) {
-                    console.error(err);
-                    await fetch.commandErrorResponse(interaction, assets)
+                    } else {
+                        await fetch.commandErrorResponse(interaction, assets);
+                    };
+                } else {
+                    system.automod.swearFilter.channels.push(channel.id);
+
+                    const update = await cache.update(system);
+
+                    if (update) {
+                        if (interaction.replied) {
+                            await interaction.followUp({
+                                "content": "",
+                                "embeds": [
+                                    {
+                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the swear filter.`,
+                                        "color": assets.colors.primary,
+                                    },
+                                ],
+                            });
+                        } else {
+                            await interaction.reply({
+                                "content": "",
+                                "embeds": [
+                                    {
+                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the swear filter.`,
+                                        "color": assets.colors.primary,
+                                    },
+                                ],
+                            });
+                        };
+                    } else {
+                        await fetch.commandErrorResponse(interaction, assets);
+                    };
                 };
             };
         };
@@ -467,16 +447,15 @@ module.exports = {
         if (interaction.memberPermissions.has(PermissionFlagsBits.Administrator, true)) {
             switch (subCmd) {
                 case "toggle":
-                    await toggleCmd(connection);
+                    await toggleCmd();
                     break;
 
                 case "swears":
-                    await swearsCmd(connection);
+                    await swearsCmd();
                     break;
 
                 default:
                     await fetch.commandErrorResponse(interaction, assets);
-                    await fetch.closeConnect(connection);
                     break;
             };
         };
