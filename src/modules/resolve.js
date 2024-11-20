@@ -1,4 +1,5 @@
 const cacheModule = require("../cache.js");
+const { ModActionType, FilterMode } = require("../classes.js");
 
 const SysSettings = require("../settings.json");
 
@@ -179,6 +180,62 @@ module.exports = {
                     value: "An internal error occurred.",
                 },
             };
+        };
+    },
+
+    /**
+     * 
+     * @param {number} punish Punishment ID.
+     * 
+     * @returns {string} Punishment name.
+     */
+    punishmentType: (punish) => {
+        switch (punish) {
+            case ModActionType.Ban:
+                return "ban";
+
+            case ModActionType.Softban:
+                return "softban";
+
+            case ModActionType.Kick:
+                return "kick";
+
+            case ModActionType.Blacklist:
+                return "blacklist";
+
+            case ModActionType.Timeout:
+                return "timeout";
+
+            case ModActionType.Mute:
+                return "mute";
+
+            case ModActionType.Warn:
+                return "warn";
+
+            case ModActionType.None:
+                return "none";
+
+            default:
+                return "none";
+        };
+    },
+
+    /**
+     * 
+     * @param {number} mode Filter mode ID.
+     * 
+     * @returns {string} Filter mode name.
+     */
+    filterMode: (mode) => {
+        switch (mode) {
+            case FilterMode.Include:
+                return "include";
+
+            case FilterMode.Exclude:
+                return "exclude";
+
+            default:
+                return "exclude";
         };
     },
 };

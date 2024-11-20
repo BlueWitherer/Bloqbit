@@ -1,6 +1,6 @@
 const SysAssets = require("../../assets.json");
 const SysSettings = require("../../settings.json");
-const { BotDatabase } = require("../../classes.js");
+const { BotDatabase, LogEventType } = require("../../classes.js");
 const { ChatInputCommandInteraction } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
@@ -17,7 +17,7 @@ module.exports = {
             .setName("config")
             .setDescription("Adjust the general settings of the module per your server's needs.")
             .addBooleanOption((o) => o
-                .setName("enabled")
+                .setName("enable")
                 .setDescription("Toggle logging module.")
                 .setRequired(true))
             .addChannelOption((o) => o
@@ -33,84 +33,84 @@ module.exports = {
                 .addChoices(
                     {
                         name: "Auto-moderator",
-                        value: "automod",
+                        value: LogEventType.AutoModerator,
                     },
                     {
                         name: "Moderator",
-                        value: "mod",
+                        value: LogEventType.Moderator,
                     },
                     {
                         name: "Server invites",
-                        value: "serverInv",
+                        value: LogEventType.ServerInvites,
                     },
                     {
                         name: "Member joins",
-                        value: "memJoin",
+                        value: LogEventType.MemberJoin,
                     },
                     {
                         name: "Member leaves",
-                        value: "memLeave",
+                        value: LogEventType.MemberLeave,
                     },
                     {
                         name: "Member timed out",
-                        value: "memTimeout",
+                        value: LogEventType.MemberTimeout,
                     },
                     {
                         name: "Member banned",
-                        value: "memBan",
+                        value: LogEventType.MemberBan,
                     },
                     {
                         name: "Member nickname updated",
-                        value: "memNickname",
+                        value: LogEventType.MemberNickname,
                     },
                     {
                         name: "Message deleted",
-                        value: "msgDel",
+                        value: LogEventType.MessageDelete,
                     },
                     {
                         name: "Message edited",
-                        value: "msgUpd",
+                        value: LogEventType.MessageEdit,
                     },
                     {
                         name: "Message pinned",
-                        value: "msgPin",
+                        value: LogEventType.MessagePin,
                     },
                     {
                         name: "Messages bulk deleted",
-                        value: "msgBulkDel",
+                        value: LogEventType.MessageBulkDelete,
                     },
                     {
                         name: "All reactions removed from message",
-                        value: "remAllReact",
+                        value: LogEventType.MessageReactionClear,
                     },
                     {
                         name: "Role created",
-                        value: "rolesAdd",
+                        value: LogEventType.RoleCreate,
                     },
                     {
                         name: "Role deleted",
-                        value: "rolesRem",
+                        value: LogEventType.RoleDelete,
                     },
                     {
                         name: "Role assigned",
-                        value: "rolesAssign",
+                        value: LogEventType.RoleGive,
                     },
                     {
                         name: "Role taken",
-                        value: "rolesUnassign",
+                        value: LogEventType.RoleTake,
                     },
                     {
                         name: "Channel created",
-                        value: "channelAdd",
+                        value: LogEventType.ChannelCreate,
                     },
                     {
                         name: "Channel deleted",
-                        value: "channelRem",
+                        value: LogEventType.ChannelDelete,
                     },
                 )
                 .setRequired(true))
             .addBooleanOption((o) => o
-                .setName("enabled")
+                .setName("enable")
                 .setDescription("Toggle detection of this action.")
                 .setRequired(true))
             .addChannelOption((o) => o
@@ -123,10 +123,92 @@ module.exports = {
      * @param {typeof SysAssets} assets The configuration of the client's visual assets.
      * @param {typeof SysSettings} system The settings model for the bot's configuration.
      * @param {BotDatabase} db The database information.
+     * 
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
-        // TODO: Allow for saving logging event settings
+        /**
+         * 
+         * @param {boolean} bool Boolean
+         * 
+         * @returns {string} "enabled" or "disabled"
+         */
+        const abled = (bool) => {
+            if (bool) {
+                return "enabled";
+            } else {
+                return "disabled";
+            };
+        };
+
+        const toggleCmd = async () => {
+            const toggle = interaction.options?.getBoolean("enable", true);
+            const channel = interaction.options?.getChannel("channel", true);
+
+            if (typeof toggle === "boolean") {
+                system.logs.enabled = toggle;
+    
+                const update = await cache.update(system, db);
+    
+                if (update) {
+                    if (interaction.replied) {
+                        await interaction.followUp({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ logs.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    } else {
+                        await interaction.reply({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ logs.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    };
+                } else {
+                    await fetch.commandErrorResponse(interaction, assets);
+                };
+            };
+
+            if (typeof channel === "object") {
+                system.logs.channel = channel.id;
+    
+                const update = await cache.update(system, db);
+    
+                if (update) {
+                    if (interaction.replied) {
+                        await interaction.followUp({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    } else {
+                        await interaction.reply({
+                            "content": "",
+                            "embeds": [
+                                {
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel.`,
+                                    "color": assets.colors.primary,
+                                },
+                            ],
+                        });
+                    };
+                } else {
+                    await fetch.commandErrorResponse(interaction, assets);
+                };
+            };
+        };
 
         return await interaction.reply({
             "content": "Command is W.I.P.!",

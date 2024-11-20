@@ -17,13 +17,14 @@ module.exports = {
      * @param {typeof SysAssets} assets The configuration of the client's visual assets.
      * @param {typeof SysSettings} system The settings model for the bot's configuration.
      * @param {BotDatabase} db The database information.
+     * 
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
         const registered = fetch.fetchGuild(interaction.guild?.id);
 
         if (registered) {
-            console.log(`Manually registered guild ${interaction.guild?.name} (${interaction.guild?.id}) successfully.`);
+            console.log(`Fetched guild ${interaction.guild?.name} (${interaction.guild?.id}) successfully.`);
             interaction.reply({
                 "content": "",
                 "embeds": [

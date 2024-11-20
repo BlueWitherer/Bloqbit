@@ -70,7 +70,7 @@ module.exports = {
                 const database = dbClient.db("Bloqbit");
                 const collection = database.collection("servers");
 
-                await collection.updateOne({ server: system.server }, system);
+                await collection.updateOne({ server: system.server }, { $set: system });
 
                 return system;
             } catch (err) {

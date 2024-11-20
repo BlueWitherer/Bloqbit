@@ -3,7 +3,7 @@ const SysSettings = require("../../settings.json");
 const { BotDatabase } = require("../../classes.js");
 const { ChatInputCommandInteraction } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
+const { PermissionFlagsBits } = require('discord-api-types/v10');
 const fetch = require("../../modules/fetch.js");
 
 module.exports = {
@@ -26,6 +26,7 @@ module.exports = {
      * @param {typeof SysAssets} assets The configuration of the client's visual assets.
      * @param {typeof SysSettings} system The settings model for the bot's configuration.
      * @param {BotDatabase} db The database information.
+     * 
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
@@ -112,6 +113,50 @@ module.exports = {
             });
         } catch (err) {
             return null;
+        } finally {
+            if (system.logs.enabled && system.logs.actions.moderator) {
+                /**
+                 * @type {import("discord.js").TextChannel} Logging channel.
+                 */
+                const logChannel = await interaction.guild?.channels?.fetch(system.logs.channel);
+                const date = Math.floor(Date.now() / 1000);
+
+                if (logChannel) {
+                    await logChannel.send({
+                        "content": "",
+                        "embeds": [
+                            {
+                                "author": {
+                                    "name": "Moderation Action",
+                                },
+                                "description": `**${interaction.user?.username}** has made a moderation action on \`${User.username}\``,
+                                "color": assets.colors.terciary,
+                                "fields": [
+                                    {
+                                        "name": "Type",
+                                        "value": `Ban`,
+                                        "inline": true,
+                                    },
+                                    {
+                                        "name": "Reason",
+                                        "value": `${banreason}`,
+                                        "inline": true,
+                                    },
+                                    {
+                                        "name": "Action Time",
+                                        "value": `<t:${date}:F> • <t:${date}:R>`,
+                                        "inline": false,
+                                    },
+                                ],
+                                "footer": {
+                                    "text": interaction.user?.username,
+                                    "icon_url": interaction.user?.displayAvatarURL({ "forceStatic": false, "size": 128 }),
+                                },
+                            },
+                        ],
+                    });
+                };
+            };
         };
     },
 };

@@ -1,7 +1,7 @@
 const SysAssets = require("../../assets.json");
 const SysSettings = require("../../settings.json");
-const { BotDatabase } = require("../../classes.js");
-const { ChatInputCommandInteraction } = require("discord.js");
+const { BotDatabase, FilterMode, ModActionType } = require("../../classes.js");
+const { ChatInputCommandInteraction, Role, BaseChannel } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
 const fetch = require("../../modules/fetch.js");
@@ -15,10 +15,10 @@ module.exports = {
         .setDescription("Configure auto-moderator settings to your server's needs.")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addSubcommand((c) => c
-            .setName("toggle")
+            .setName("enable")
             .setDescription("Activate or deactivate the Auto-moderator module.")
             .addBooleanOption((o) => o
-                .setName("enabled")
+                .setName("enable")
                 .setDescription("Toggle auto-moderator module.")
                 .setRequired(true)))
         .addSubcommand((c) => c
@@ -45,46 +45,41 @@ module.exports = {
             .addRoleOption((o) => o
                 .setName("toggle_role")
                 .setDescription("Enable or disable the filter for this role."))
-            .addStringOption((o) => o
-                .setName("warning")
-                .setDescription("Add a custom warning message to be sent to the user.")
-                .setMinLength(5)
-                .setMaxLength(255))
             .addNumberOption((o) => o
                 .setName("punishment")
                 .setDescription("The action that will be taken on the user.")
                 .addChoices(
                     {
                         name: "none",
-                        value: 0,
+                        value: ModActionType.None,
                     },
                     {
                         name: "warn",
-                        value: 1,
+                        value: ModActionType.Warn,
                     },
                     {
                         name: "mute",
-                        value: 2,
+                        value: ModActionType.Mute,
                     },
                     {
                         name: "timeout",
-                        value: 3,
+                        value: ModActionType.Timeout,
                     },
                     {
                         name: "blacklist",
-                        value: 4,
+                        value: ModActionType.Blacklist,
                     },
                     {
                         name: "kick",
-                        value: 5,
+                        value: ModActionType.Kick,
                     },
                     {
                         name: "softban",
-                        value: 6,
+                        value: ModActionType.Softban,
                     },
                     {
                         name: "ban",
-                        value: 7,
+                        value: ModActionType.Ban,
                     },
                 ))
             .addBooleanOption((o) => o
@@ -100,11 +95,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: 1,
+                        value: FilterMode.Include,
                     },
                     {
                         name: "exclude",
-                        value: 0,
+                        value: FilterMode.Exclude,
                     },
                 ))
             .addNumberOption((o) => o
@@ -113,11 +108,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: 1,
+                        value: FilterMode.Include,
                     },
                     {
                         name: "exclude",
-                        value: 0,
+                        value: FilterMode.Exclude,
                     },
                 )))
         .addSubcommand((c) => c
@@ -139,46 +134,41 @@ module.exports = {
             .addRoleOption((o) => o
                 .setName("toggle_role")
                 .setDescription("Enable or disable the filter for this role."))
-            .addStringOption((o) => o
-                .setName("warning")
-                .setDescription("Add a custom warning message to be sent to the user.")
-                .setMinLength(5)
-                .setMaxLength(255))
             .addNumberOption((o) => o
                 .setName("punishment")
                 .setDescription("The action that will be taken on the user.")
                 .addChoices(
                     {
                         name: "none",
-                        value: 0,
+                        value: ModActionType.None,
                     },
                     {
                         name: "warn",
-                        value: 1,
+                        value: ModActionType.Warn,
                     },
                     {
                         name: "mute",
-                        value: 2,
+                        value: ModActionType.Mute,
                     },
                     {
                         name: "timeout",
-                        value: 3,
+                        value: ModActionType.Timeout,
                     },
                     {
                         name: "blacklist",
-                        value: 4,
+                        value: ModActionType.Blacklist,
                     },
                     {
                         name: "kick",
-                        value: 5,
+                        value: ModActionType.Kick,
                     },
                     {
                         name: "softban",
-                        value: 6,
+                        value: ModActionType.Softban,
                     },
                     {
                         name: "ban",
-                        value: 7,
+                        value: ModActionType.Ban,
                     },
                 ))
             .addBooleanOption((o) => o
@@ -220,46 +210,41 @@ module.exports = {
             .addRoleOption((o) => o
                 .setName("toggle_role")
                 .setDescription("Enable or disable the filter for this role."))
-            .addStringOption((o) => o
-                .setName("warning")
-                .setDescription("Add a custom warning message to be sent to the user.")
-                .setMinLength(5)
-                .setMaxLength(255))
             .addNumberOption((o) => o
                 .setName("punishment")
                 .setDescription("The action that will be taken on the user.")
                 .addChoices(
                     {
                         name: "none",
-                        value: 0,
+                        value: ModActionType.None,
                     },
                     {
                         name: "warn",
-                        value: 1,
+                        value: ModActionType.Warn,
                     },
                     {
                         name: "mute",
-                        value: 2,
+                        value: ModActionType.Mute,
                     },
                     {
                         name: "timeout",
-                        value: 3,
+                        value: ModActionType.Timeout,
                     },
                     {
                         name: "blacklist",
-                        value: 4,
+                        value: ModActionType.Blacklist,
                     },
                     {
                         name: "kick",
-                        value: 5,
+                        value: ModActionType.Kick,
                     },
                     {
                         name: "softban",
-                        value: 6,
+                        value: ModActionType.Softban,
                     },
                     {
                         name: "ban",
-                        value: 7,
+                        value: ModActionType.Ban,
                     },
                 ))
             .addBooleanOption((o) => o
@@ -275,11 +260,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: 1,
+                        value: FilterMode.Include,
                     },
                     {
                         name: "exclude",
-                        value: 0,
+                        value: FilterMode.Exclude,
                     },
                 ))),
     /**
@@ -288,6 +273,7 @@ module.exports = {
      * @param {typeof SysAssets} assets The configuration of the client's visual assets.
      * @param {typeof SysSettings} system The settings model for the bot's configuration.
      * @param {BotDatabase} db The database information.
+     * 
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
@@ -307,23 +293,51 @@ module.exports = {
             };
         };
 
+        /**
+         * 
+         * @param {number} number Amount.
+         * @param {string} singular Singular word.
+         * @param {string} plural Plural word.
+         * 
+         * @returns {string} Singular or plural based on amount.
+         */
+        const isPlural = (number, singular, plural) => {
+            if (number < 1 || 1 < number) {
+                return plural;
+            } else {
+                return singular
+            };
+        };
+
         const toggleCmd = async () => {
-            const toggle = interaction.options?.getBoolean("enabled", true);
+            const toggle = interaction.options?.getBoolean("enable", true);
 
             system.automod.enabled = toggle;
 
-            const update = await cache.update(system);
+            const update = await cache.update(system, db);
 
             if (update) {
-                await interaction.reply({
-                    "content": "",
-                    "embeds": [
-                        {
-                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
-                            "color": assets.colors.primary,
-                        },
-                    ],
-                });
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": "",
+                        "embeds": [
+                            {
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
+                                "color": assets.colors.primary,
+                            },
+                        ],
+                    });
+                } else {
+                    await interaction.reply({
+                        "content": "",
+                        "embeds": [
+                            {
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
+                                "color": assets.colors.primary,
+                            },
+                        ],
+                    });
+                };
             } else {
                 await fetch.commandErrorResponse(interaction, assets);
             };
@@ -331,116 +345,156 @@ module.exports = {
 
         const swearsCmd = async () => {
             const toggle = interaction.options?.getBoolean("enable", true);
-            const result_toggle = resolve.numberBool(toggle);
 
             const filter = interaction.options?.getString("filter");
+            const superFilter = interaction.options?.getString("super_filter");
             const channel = interaction.options?.getChannel("toggle_channel");
             const role = interaction.options?.getRole("toggle_role");
-            const warning = interaction.options?.getString("warning");
             const punishment = interaction.options?.getNumber("punishment");
-            const deleteMsg = interaction.options?.getBoolean("del_message");
             const logChannel = interaction.options?.getChannel("log_channel");
             const filterMode = interaction.options?.getNumber("filter_mode");
             const permissionFilterMode = interaction.options?.getNumber("permission_filter_mode");
 
-            if (filter && filter !== null) {
-                const list = filter.split(",");
+            const allEmbeds = [];
 
-                list.forEach((w) => system.automod.swearFilter.keywords.push(w.replace(/\s+/g, ' ').trim()));
+            if (toggle !== null && typeof toggle === "boolean") {
+                system.automod.swearFilter.enabled = toggle;
 
-                const update = await cache.update(system);
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ the swear filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
 
-                if (update) {
-                    if (interaction.replied) {
-                        await interaction.followUp({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the swear filter.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    } else {
-                        await interaction.reply({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the swear filter.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    };
+            if (filter !== null && typeof filter === "string") {
+                if (filter === "<RESET>") {
+                    system.automod.swearFilter.keywords.splice(0, system.automod.swearFilter.keywords.length());
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __cleared__ the swear filter.`,
+                        "color": assets.colors.primary,
+                    });
                 } else {
-                    await fetch.commandErrorResponse(interaction, assets);
+                    const list = filter.split(",");
+
+                    list.forEach((w) => system.automod.swearFilter.keywords.push(w.replace(/\s+/g, ' ').trim()));
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the swear filter.`,
+                        "color": assets.colors.primary,
+                    });
                 };
             };
 
-            if (channel && channel !== null) {
+            if (superFilter !== null && typeof superFilter === "string") {
+                if (superFilter === "<RESET>") {
+                    system.automod.swearFilter.superkeywords.splice(0, system.automod.swearFilter.superkeywords.length());
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __cleared__ the severe swear filter.`,
+                        "color": assets.colors.primary,
+                    });
+                } else {
+                    const list = superFilter.split(",");
+
+                    list.forEach((w) => system.automod.swearFilter.superkeywords.push(w.replace(/\s+/g, ' ').trim()));
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the severe swear filter.`,
+                        "color": assets.colors.primary,
+                    });
+                };
+            };
+
+            if (channel !== null && typeof channel === "object") {
                 const foundChannel = system.automod.swearFilter.channels.findIndex((c) => c === channel.id);
 
                 if (foundChannel >= 0) {
                     system.automod.swearFilter.channels.splice(foundChannel, 1);
 
-                    const update = await cache.update(system);
-
-                    if (update) {
-                        if (interaction.replied) {
-                            await interaction.followUp({
-                                "content": "",
-                                "embeds": [
-                                    {
-                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the swear filter.`,
-                                        "color": assets.colors.primary,
-                                    },
-                                ],
-                            });
-                        } else {
-                            await interaction.reply({
-                                "content": "",
-                                "embeds": [
-                                    {
-                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the swear filter.`,
-                                        "color": assets.colors.primary,
-                                    },
-                                ],
-                            });
-                        };
-                    } else {
-                        await fetch.commandErrorResponse(interaction, assets);
-                    };
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the swear filter.`,
+                            "color": assets.colors.primary,
+                        });
                 } else {
                     system.automod.swearFilter.channels.push(channel.id);
 
-                    const update = await cache.update(system);
-
-                    if (update) {
-                        if (interaction.replied) {
-                            await interaction.followUp({
-                                "content": "",
-                                "embeds": [
-                                    {
-                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the swear filter.`,
-                                        "color": assets.colors.primary,
-                                    },
-                                ],
-                            });
-                        } else {
-                            await interaction.reply({
-                                "content": "",
-                                "embeds": [
-                                    {
-                                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the swear filter.`,
-                                        "color": assets.colors.primary,
-                                    },
-                                ],
-                            });
-                        };
-                    } else {
-                        await fetch.commandErrorResponse(interaction, assets);
-                    };
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the swear filter.`,
+                            "color": assets.colors.primary,
+                        });
                 };
+            };
+
+            if (role !== null && typeof role === "object") {
+                const foundRole = system.automod.swearFilter.roles.findIndex((r) => r === role.id);
+
+                if (foundRole >= 0) {
+                    system.automod.swearFilter.roles.splice(foundRole, 1);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`@${role.name}\`__ from the swear filter.`,
+                            "color": assets.colors.primary,
+                        });
+                } else {
+                    system.automod.swearFilter.roles.push(role.id);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`@${role.name}\`__ to the swear filter.`,
+                            "color": assets.colors.primary,
+                        });
+                };
+            };
+
+            if (punishment !== null && typeof punishment === "number") {
+                system.automod.swearFilter.punishment === punishment;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set the punishment to \`${resolve.punishmentType(punishment)}\`__ for the swear filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (logChannel !== null && typeof logChannel === "object") {
+                system.automod.swearFilter.logs = logChannel.id;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel for the swear filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (filterMode !== null && typeof filterMode === "number") {
+                system.automod.swearFilter.filterMode = filterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(filterMode)}\`__ as the swear filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (permissionFilterMode !== null && typeof permissionFilterMode === "number") {
+                system.automod.swearFilter.permFilterMode = permissionFilterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(permissionFilterMode)}\`__ as the swear filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            const update = await cache.update(system, db);
+
+            if (update) {
+                await interaction.reply({
+                    "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${isPlural(allEmbeds.length, "setting", "settings")}.`,
+                    "embeds": allEmbeds,
+                });
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
             };
         };
 

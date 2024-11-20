@@ -218,7 +218,7 @@ module.exports = {
 
                     console.log(`Step 6 | Updating cache.`);
 
-                    const final = cacheModule.update(thisGuild);
+                    const final = cacheModule.update(thisGuild, db);
                     return final;
                 };
             } catch (err) {
