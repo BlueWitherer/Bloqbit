@@ -238,4 +238,34 @@ module.exports = {
                 return "exclude";
         };
     },
+
+    /**
+     * 
+     * @param {boolean} bool Boolean
+     * 
+     * @returns {string} "enabled" or "disabled"
+     */
+    abled: (bool) => {
+        if (bool) {
+            return "enabled";
+        } else {
+            return "disabled";
+        };
+    },
+
+    /**
+     * 
+     * @param {number} number Amount.
+     * @param {string} singular Singular word.
+     * @param {string} plural Plural word.
+     * 
+     * @returns {string} Singular or plural based on amount.
+     */
+    isPlural: (number, singular, plural) => {
+        if (number < 1 || 1 < number) {
+            return plural;
+        } else {
+            return singular
+        };
+    },
 };

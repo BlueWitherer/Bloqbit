@@ -127,36 +127,22 @@ module.exports = {
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
-        /**
-         * 
-         * @param {boolean} bool Boolean
-         * 
-         * @returns {string} "enabled" or "disabled"
-         */
-        const abled = (bool) => {
-            if (bool) {
-                return "enabled";
-            } else {
-                return "disabled";
-            };
-        };
-
-        const toggleCmd = async () => {
+        const configCmd = async () => {
             const toggle = interaction.options?.getBoolean("enable", true);
             const channel = interaction.options?.getChannel("channel", true);
 
             if (typeof toggle === "boolean") {
                 system.logs.enabled = toggle;
-    
+
                 const update = await cache.update(system, db);
-    
+
                 if (update) {
                     if (interaction.replied) {
                         await interaction.followUp({
                             "content": "",
                             "embeds": [
                                 {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ logs.`,
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs.`,
                                     "color": assets.colors.primary,
                                 },
                             ],
@@ -166,7 +152,7 @@ module.exports = {
                             "content": "",
                             "embeds": [
                                 {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ logs.`,
+                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs.`,
                                     "color": assets.colors.primary,
                                 },
                             ],
@@ -179,9 +165,9 @@ module.exports = {
 
             if (typeof channel === "object") {
                 system.logs.channel = channel.id;
-    
+
                 const update = await cache.update(system, db);
-    
+
                 if (update) {
                     if (interaction.replied) {
                         await interaction.followUp({
@@ -210,9 +196,14 @@ module.exports = {
             };
         };
 
-        return await interaction.reply({
-            "content": "Command is W.I.P.!",
-            "ephemeral": true,
-        });
+        switch (interaction.options?.getSubcommand()) {
+            case "config":
+                await configCmd();
+                break;
+
+            default:
+                await fetch.commandErrorResponse(interaction, assets);
+                break;
+        };
     },
 };

@@ -279,36 +279,6 @@ module.exports = {
     execute: async (interaction, assets, system, db) => {
         const subCmd = interaction.options?.getSubcommand(true);
 
-        /**
-         * 
-         * @param {boolean} bool Boolean
-         * 
-         * @returns {string} "enabled" or "disabled"
-         */
-        const abled = (bool) => {
-            if (bool) {
-                return "enabled";
-            } else {
-                return "disabled";
-            };
-        };
-
-        /**
-         * 
-         * @param {number} number Amount.
-         * @param {string} singular Singular word.
-         * @param {string} plural Plural word.
-         * 
-         * @returns {string} Singular or plural based on amount.
-         */
-        const isPlural = (number, singular, plural) => {
-            if (number < 1 || 1 < number) {
-                return plural;
-            } else {
-                return singular
-            };
-        };
-
         const toggleCmd = async () => {
             const toggle = interaction.options?.getBoolean("enable", true);
 
@@ -322,7 +292,7 @@ module.exports = {
                         "content": "",
                         "embeds": [
                             {
-                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ auto-moderator.`,
                                 "color": assets.colors.primary,
                             },
                         ],
@@ -332,7 +302,7 @@ module.exports = {
                         "content": "",
                         "embeds": [
                             {
-                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ auto-moderator.`,
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ auto-moderator.`,
                                 "color": assets.colors.primary,
                             },
                         ],
@@ -361,7 +331,7 @@ module.exports = {
                 system.automod.swearFilter.enabled = toggle;
 
                 allEmbeds.push({
-                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${abled(toggle)}__ the swear filter.`,
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ the swear filter.`,
                     "color": assets.colors.primary,
                 });
             };
@@ -490,7 +460,7 @@ module.exports = {
 
             if (update) {
                 await interaction.reply({
-                    "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${isPlural(allEmbeds.length, "setting", "settings")}.`,
+                    "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
                     "embeds": allEmbeds,
                 });
             } else {
