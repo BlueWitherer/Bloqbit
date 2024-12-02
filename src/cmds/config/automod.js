@@ -82,9 +82,6 @@ module.exports = {
                         value: ModActionType.Ban,
                     },
                 ))
-            .addBooleanOption((o) => o
-                .setName("del_message")
-                .setDescription("Whether or not to remove the message when detected."))
             .addChannelOption((o) => o
                 .setName("log_channel")
                 .setDescription("Choose a different channel to log this moderation action.")
@@ -171,9 +168,6 @@ module.exports = {
                         value: ModActionType.Ban,
                     },
                 ))
-            .addBooleanOption((o) => o
-                .setName("del_message")
-                .setDescription("Whether or not to remove the message when detected."))
             .addChannelOption((o) => o
                 .setName("log_channel")
                 .setDescription("Choose a different channel to log this moderation action.")
@@ -247,9 +241,6 @@ module.exports = {
                         value: ModActionType.Ban,
                     },
                 ))
-            .addBooleanOption((o) => o
-                .setName("del_message")
-                .setDescription("Whether or not to remove the message when detected."))
             .addChannelOption((o) => o
                 .setName("log_channel")
                 .setDescription("Choose a different channel to log this moderation action.")
@@ -459,29 +450,324 @@ module.exports = {
             const update = await cache.update(system, db);
 
             if (update) {
-                await interaction.reply({
-                    "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
-                    "embeds": allEmbeds,
-                });
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                } else {
+                    await interaction.reply({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                };
             } else {
                 await fetch.commandErrorResponse(interaction, assets);
             };
         };
 
-        if (interaction.memberPermissions.has(PermissionFlagsBits.Administrator, true)) {
-            switch (subCmd) {
-                case "toggle":
-                    await toggleCmd();
-                    break;
+        const invitesCmd = async () => {
+            const toggle = interaction.options.getBoolean("enable", true);
 
-                case "swears":
-                    await swearsCmd();
-                    break;
+            const filter = interaction.options?.getString("filter");
+            const channel = interaction.options?.getChannel("toggle_channel");
+            const role = interaction.options?.getRole("toggle_role");
+            const punishment = interaction.options?.getNumber("punishment");
+            const logChannel = interaction.options?.getChannel("log_channel");
+            const filterMode = interaction.options?.getNumber("filter_mode");
+            const permissionFilterMode = interaction.options?.getNumber("permission_filter_mode");
 
-                default:
-                    await fetch.commandErrorResponse(interaction, assets);
-                    break;
+            const allEmbeds = [];
+
+            if (toggle !== null && typeof toggle === "boolean") {
+                system.automod.inviteFilter.enabled = toggle;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ the invite filter.`,
+                    "color": assets.colors.primary,
+                });
             };
+
+            if (filter !== null && typeof filter === "string") {
+                if (filter === "<RESET>") {
+                    system.automod.inviteFilter.keywords.splice(0, system.automod.inviteFilter.keywords.length());
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __cleared__ the invite filter.`,
+                        "color": assets.colors.primary,
+                    });
+                } else {
+                    const list = filter.split(",");
+
+                    list.forEach((w) => system.automod.inviteFilter.keywords.push(w.replace(/\s+/g, ' ').trim()));
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the invite filter.`,
+                        "color": assets.colors.primary,
+                    });
+                };
+            };
+
+            if (channel !== null && typeof channel === "object") {
+                const foundChannel = system.automod.inviteFilter.channels.findIndex((c) => c === channel.id);
+
+                if (foundChannel >= 0) {
+                    system.automod.inviteFilter.channels.splice(foundChannel, 1);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the invite filter.`,
+                            "color": assets.colors.primary,
+                        });
+                } else {
+                    system.automod.inviteFilter.channels.push(channel.id);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the invite filter.`,
+                            "color": assets.colors.primary,
+                        });
+                };
+            };
+
+            if (role !== null && typeof role === "object") {
+                const foundRole = system.automod.inviteFilter.roles.findIndex((r) => r === role.id);
+
+                if (foundRole >= 0) {
+                    system.automod.inviteFilter.roles.splice(foundRole, 1);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`@${role.name}\`__ from the invite filter.`,
+                            "color": assets.colors.primary,
+                        });
+                } else {
+                    system.automod.inviteFilter.roles.push(role.id);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`@${role.name}\`__ to the invite filter.`,
+                            "color": assets.colors.primary,
+                        });
+                };
+            };
+
+            if (punishment !== null && typeof punishment === "number") {
+                system.automod.inviteFilter.punishment === punishment;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set the punishment to \`${resolve.punishmentType(punishment)}\`__ for the invite filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (logChannel !== null && typeof logChannel === "object") {
+                system.automod.inviteFilter.logs = logChannel.id;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel for the invite filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (filterMode !== null && typeof filterMode === "number") {
+                system.automod.inviteFilter.filterMode = filterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(filterMode)}\`__ as the invite filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (permissionFilterMode !== null && typeof permissionFilterMode === "number") {
+                system.automod.inviteFilter.permFilterMode = permissionFilterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(permissionFilterMode)}\`__ as the invite filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            const update = await cache.update(system, db);
+
+            if (update) {
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                } else {
+                    await interaction.reply({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                };
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
+            };
+        };
+
+        const linksCmd = async () => {
+            const toggle = interaction.options.getBoolean("enable", true);
+
+            const filter = interaction.options?.getString("filter");
+            const channel = interaction.options?.getChannel("toggle_channel");
+            const role = interaction.options?.getRole("toggle_role");
+            const punishment = interaction.options?.getNumber("punishment");
+            const logChannel = interaction.options?.getChannel("log_channel");
+            const filterMode = interaction.options?.getNumber("filter_mode");
+            const permissionFilterMode = interaction.options?.getNumber("permission_filter_mode");
+
+            const allEmbeds = [];
+
+            if (toggle !== null && typeof toggle === "boolean") {
+                system.automod.linkFilter.enabled = toggle;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ the link filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (filter !== null && typeof filter === "string") {
+                if (filter === "<RESET>") {
+                    system.automod.linkFilter.keywords.splice(0, system.automod.linkFilter.keywords.length());
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __cleared__ the link filter.`,
+                        "color": assets.colors.primary,
+                    });
+                } else {
+                    const list = filter.split(",");
+
+                    list.forEach((w) => system.automod.linkFilter.keywords.push(w.replace(/\s+/g, ' ').trim()));
+
+                    allEmbeds.push({
+                        "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`${list.length}\` words__ to the link filter.`,
+                        "color": assets.colors.primary,
+                    });
+                };
+            };
+
+            if (channel !== null && typeof channel === "object") {
+                const foundChannel = system.automod.linkFilter.channels.findIndex((c) => c === channel.id);
+
+                if (foundChannel >= 0) {
+                    system.automod.linkFilter.channels.splice(foundChannel, 1);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`#${channel.name}\`__ from the link filter.`,
+                            "color": assets.colors.primary,
+                        });
+                } else {
+                    system.automod.linkFilter.channels.push(channel.id);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`#${channel.name}\`__ to the link filter.`,
+                            "color": assets.colors.primary,
+                        });
+                };
+            };
+
+            if (role !== null && typeof role === "object") {
+                const foundRole = system.automod.linkFilter.roles.findIndex((r) => r === role.id);
+
+                if (foundRole >= 0) {
+                    system.automod.linkFilter.roles.splice(foundRole, 1);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __removed \`@${role.name}\`__ from the link filter.`,
+                            "color": assets.colors.primary,
+                        });
+                } else {
+                    system.automod.linkFilter.roles.push(role.id);
+
+                    allEmbeds.push(
+                        {
+                            "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __added \`@${role.name}\`__ to the link filter.`,
+                            "color": assets.colors.primary,
+                        });
+                };
+            };
+
+            if (punishment !== null && typeof punishment === "number") {
+                system.automod.linkFilter.punishment === punishment;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set the punishment to \`${resolve.punishmentType(punishment)}\`__ for the link filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (logChannel !== null && typeof logChannel === "object") {
+                system.automod.linkFilter.logs = logChannel.id;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel for the link filter.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (filterMode !== null && typeof filterMode === "number") {
+                system.automod.linkFilter.filterMode = filterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(filterMode)}\`__ as the link filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            if (permissionFilterMode !== null && typeof permissionFilterMode === "number") {
+                system.automod.linkFilter.permFilterMode = permissionFilterMode;
+
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`${resolve.filterMode(permissionFilterMode)}\`__ as the link filter mode.`,
+                    "color": assets.colors.primary,
+                });
+            };
+
+            const update = await cache.update(system, db);
+
+            if (update) {
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                } else {
+                    await interaction.reply({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
+                };
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
+            };
+        };
+
+        switch (subCmd) {
+            case "toggle":
+                await toggleCmd();
+                break;
+
+            case "swears":
+                await swearsCmd();
+                break;
+
+            case "invites":
+                await invitesCmd();
+                break;
+
+            case "links":
+                await linksCmd();
+                break;
+
+            default:
+                await fetch.commandErrorResponse(interaction, assets);
+                break;
         };
     },
 };

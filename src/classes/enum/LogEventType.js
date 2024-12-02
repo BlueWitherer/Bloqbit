@@ -14,7 +14,6 @@ class LogEventType {
     static MessageEdit = "msgUpd";
     static MessagePin = "msgPin";
     static MessageBulkDelete = "msgBulkDel";
-    static MessageReactionClear = "remAllReact";
     static RoleCreate = "rolesAdd";
     static RoleDelete = "rolesRem";
     static RoleGive = "rolesAssign";

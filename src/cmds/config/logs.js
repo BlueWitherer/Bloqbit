@@ -80,10 +80,6 @@ module.exports = {
                         value: LogEventType.MessageBulkDelete,
                     },
                     {
-                        name: "All reactions removed from message",
-                        value: LogEventType.MessageReactionClear,
-                    },
-                    {
                         name: "Role created",
                         value: LogEventType.RoleCreate,
                     },
@@ -112,11 +108,7 @@ module.exports = {
             .addBooleanOption((o) => o
                 .setName("enable")
                 .setDescription("Toggle detection of this action.")
-                .setRequired(true))
-            .addChannelOption((o) => o
-                .setName("channel")
-                .setDescription("Set the channel in which this action will be logged.")
-                .addChannelTypes([ChannelType.GuildText, ChannelType.GuildVoice]))),
+                .setRequired(true))),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction The interaction for the slash command.
@@ -127,76 +119,155 @@ module.exports = {
      * @returns {void}
      */
     execute: async (interaction, assets, system, db) => {
+        const subCmd = interaction.options?.getSubcommand(true);
+
         const configCmd = async () => {
             const toggle = interaction.options?.getBoolean("enable", true);
             const channel = interaction.options?.getChannel("channel", true);
 
-            if (typeof toggle === "boolean") {
+            const allEmbeds = [];
+
+            if (toggle !== null && typeof toggle === "boolean") {
                 system.logs.enabled = toggle;
 
-                const update = await cache.update(system, db);
-
-                if (update) {
-                    if (interaction.replied) {
-                        await interaction.followUp({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    } else {
-                        await interaction.reply({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    };
-                } else {
-                    await fetch.commandErrorResponse(interaction, assets);
-                };
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs.`,
+                    "color": assets.colors.primary,
+                });
             };
 
-            if (typeof channel === "object") {
+            if (channel !== null && typeof channel === "object") {
                 system.logs.channel = channel.id;
 
-                const update = await cache.update(system, db);
+                allEmbeds.push({
+                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel.`,
+                    "color": assets.colors.primary,
+                });
+            };
 
-                if (update) {
-                    if (interaction.replied) {
-                        await interaction.followUp({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    } else {
-                        await interaction.reply({
-                            "content": "",
-                            "embeds": [
-                                {
-                                    "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __set \`#${channel.name}\`__ as the logging channel.`,
-                                    "color": assets.colors.primary,
-                                },
-                            ],
-                        });
-                    };
+            const update = await cache.update(system, db);
+
+            if (update) {
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
                 } else {
-                    await fetch.commandErrorResponse(interaction, assets);
+                    await interaction.reply({
+                        "content": `> -# ${assets.icons.check} | Configured **${allEmbeds.length}** ${resolve.isPlural(allEmbeds.length, "setting", "settings")}.`,
+                        "embeds": allEmbeds,
+                    });
                 };
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
             };
         };
 
-        switch (interaction.options?.getSubcommand()) {
+        const actionCmd = async () => {
+            const action = interaction.options.getString("action", true);
+            const toggle = interaction.options.getBoolean("enable", true);
+
+            switch (action) {
+                case LogEventType.AutoModerator:
+                    system.logs.actions.autoMod = toggle;
+                    break;
+
+                case LogEventType.Moderator:
+                    system.logs.actions.moderator = toggle;
+                    break;
+
+                case LogEventType.ServerInvites:
+                    system.logs.actions.invites = toggle;
+                    break;
+
+                case LogEventType.MemberJoin:
+                    system.logs.actions.join = toggle;
+                    break;
+
+                case LogEventType.MemberLeave:
+                    system.logs.actions.leave = toggle;
+                    break;
+
+                case LogEventType.MemberTimeout:
+                    system.logs.actions.timeout = toggle;
+                    break;
+
+                case LogEventType.MemberBan:
+                    system.logs.actions.ban = toggle;
+                    break;
+
+                case LogEventType.MemberNickname:
+                    system.logs.actions.nickname = toggle;
+                    break;
+
+                case LogEventType.MessageDelete:
+                    system.logs.actions.msgDel = toggle;
+                    break;
+
+                case LogEventType.MessageEdit:
+                    system.logs.actions.msgUpd = toggle;
+                    break;
+
+                case LogEventType.MessagePin:
+                    system.logs.actions.msgPin = toggle;
+                    break;
+
+                case LogEventType.RoleCreate:
+                    system.logs.actions.rolesAdd = toggle;
+                    break;
+
+                case LogEventType.RoleDelete:
+                    system.logs.actions.rolesRem = toggle;
+                    break;
+
+                case LogEventType.RoleGive:
+                    system.logs.actions.rolesAssign = toggle;
+                    break;
+
+                case LogEventType.RoleTake:
+                    system.logs.actions.rolesUnassign = toggle;
+                    break;
+
+                case LogEventType.ChannelCreate:
+                    system.logs.actions.channelAdd = toggle;
+                    break;
+
+                case LogEventType.ChannelDelete:
+                    system.logs.actions.channelDel = toggle;
+                    break;
+            };
+
+            const update = await cache.update(system, db);
+
+            if (update) {
+                if (interaction.replied) {
+                    await interaction.followUp({
+                        "content": "",
+                        "embeds": [
+                            {
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs for action type \`${action}\`.`,
+                                "color": assets.colors.primary,
+                            },
+                        ],
+                    });
+                } else {
+                    await interaction.reply({
+                        "content": "",
+                        "embeds": [
+                            {
+                                "description": `${assets.icons.check} | **${interaction.user?.username}** - Successfully __${resolve.abled(toggle)}__ logs for action type \`${action}\`.`,
+                                "color": assets.colors.primary,
+                            },
+                        ],
+                    });
+                };
+            } else {
+                await fetch.commandErrorResponse(interaction, assets);
+            };
+        };
+
+        switch (subCmd) {
             case "config":
                 await configCmd();
                 break;
