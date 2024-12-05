@@ -1,6 +1,5 @@
 const ClientModel = require("../classes/ClientModel.js");
 const { Events, Guild, ActivityType, PresenceUpdateStatus } = require("discord.js");
-const mysql = require("mysql");
 const fetch = require("../modules/fetch.js");
 
 module.exports = {

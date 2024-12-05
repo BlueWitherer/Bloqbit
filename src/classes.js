@@ -1,5 +1,5 @@
 const ClientModel = require("./classes/ClientModel.js");
-const BotDatabase = require("./classes/Database.js");
+const BotDatabase = require("./classes/BotDatabase.js");
 
 const MessageHandler = require("./classes/handlers/MessageHandler.js");
 const UserHandler = require("./classes/handlers/ServerHandler.js");

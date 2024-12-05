@@ -7,7 +7,7 @@ const path = require("path");
 const { Client, Collection, IntentsBitField, Partials } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { MongoClient } = require("mongodb");
-const BotDatabase = require("./Database");
+const BotDatabase = require("./BotDatabase");
 
 dotenv.config();
 

@@ -66,7 +66,7 @@ module.exports = {
      * @param {Interaction} interaction Command interaction
      * @param {typeof SysAssets} assets Assets object
      * 
-     * @returns {Promise<void>} Database operation
+     * @returns {Promise<void>} BotDatabase operation
      */
     databaseErrorResponse: async (interaction, assets) => {
         if (interaction && assets) {
@@ -147,7 +147,7 @@ module.exports = {
      * @param {BotDatabase} db Class of the bot's database
      * @param {string} server ID of the server
      * 
-     * @returns {Promise<typeof SysSettings> | void} Database operation
+     * @returns {Promise<typeof SysSettings> | void} BotDatabase operation
      */
     reviseGuild: async (db, server) => {
         if (server) {

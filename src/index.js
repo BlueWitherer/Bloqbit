@@ -1,4 +1,4 @@
-const { ClientModel, BotDatabase } = require("./classes.js");
+const { ClientModel, BotDatabase, MessageHandler } = require("./classes.js");
 
 const Discord = require("discord.js");
 const { Routes } = require("discord-api-types/v9");
@@ -109,7 +109,7 @@ class StartClient {
                             });
                         };
 
-                        console.log(`Loaded event listener for ${event.name}.`);
+                        console.debug(`Loaded event listener for ${event.name}.`);
                     } catch (error) {
                         return console.error(error);
                     };
@@ -128,6 +128,9 @@ class StartClient {
                         console.log(thisGuild?.server);
                     };
                 };
+
+                console.debug("Starting handlers...");
+                new MessageHandler(client);
 
                 const devWH = new Discord.WebhookClient({ "url": botModel.dev_wh, });
 

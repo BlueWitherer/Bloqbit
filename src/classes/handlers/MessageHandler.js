@@ -12,7 +12,7 @@ class MessageHandler {
         console.debug("Initiating global message handler...");
 
         client.on(Events.MessageCreate, async (m) => {
-            const s = cache.get(m.guild?.id);
+            const s = cache.fetch(m.guild?.id);
 
             if (s && m) {
                 await this.messageSend(s, m);
@@ -28,10 +28,17 @@ class MessageHandler {
         if (message.guild) {
             const msgCont = message.content.normalize().toLowerCase();
 
+            // I: INVITES
+            let regexPatternInvite = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?(?:discord\\.gg\\/[a-zA-Z0-9]+|discord\\.com\\/invite\\/[a-zA-Z0-9]+)\\b", 'g');
+
+            const regexTestInvite = regexPatternInvite.test(msgCont);
+
+            // II: LINKS
             let regexPatternLink = new RegExp("\\bhttps?:\\/\\/[^\\s/$.?#].[^\\s]*");
 
             const regexTestLink = regexPatternLink.test(msgCont);
 
+            // III: SWEARS
             let swearWords = system.automod.swearFilter.keywords;
             let swearSuperWords = system.automod.swearFilter.superkeywords;
 
@@ -39,157 +46,113 @@ class MessageHandler {
             let regexPatternSwearSuper = new RegExp(`\\b(${swearSuperWords.join('|')})\\b`, 'i');
 
             const regexTestSwear = regexPatternSwear.test(msgCont);
-            const regexTestSwearSuper = regexPatternSwearSuper.test(msgCont)
+            const regexTestSwearSuper = regexPatternSwearSuper.test(msgCont);
 
             // Priority I
-            if (regexTestLink) {
-                console.debug(`${message.guild?.name} • Priority I Auto-moderator | Detected URL in message ${message.id}`);
+            if (regexTestInvite) {
+                console.debug(`${message.guild?.name} • Priority I Auto-moderator | Detected invite link in message ${message.id}`);
 
-                if (message.member?.permissionsIn(message.channel).has(PermissionFlagsBits.ManageMessages)) {
-                    console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} is moderator.`);
+                // Priority II
+            } else if (regexTestLink) {
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Detected URL in message ${message.id}`);
+
+                if (message.member?.permissions.has(PermissionFlagsBits.ManageMessages)) {
+                    console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} is moderator.`);
                 } else if (system.automod.linkFilter.enabled) {
                     if (message.deletable) await message.delete();
 
                     switch (system.automod.linkFilter.punishment) {
                         case ModActionType.Warn:
                             //warn
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
                             break;
 
                         case ModActionType.Mute:
                             //mute
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
                             break;
 
                         case ModActionType.Timeout:
                             //timeout
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
                             break;
 
                         case ModActionType.Blacklist:
                             //blacklist
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
                             break;
 
                         case ModActionType.Softban:
                             //softban
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
                             break;
 
                         case ModActionType.Ban:
                             //ban
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
                             break;
 
                         case ModActionType.None:
-                            console.debug(`${message.guild?.name} • Priority I Auto-moderator | Link filter punishment for guild ${message.guild?.id} disabled.`);
+                            console.debug(`${message.guild?.name} • Priority II Auto-moderator | Link filter punishment for guild ${message.guild?.id} disabled.`);
                             break;
 
                         default:
-                            console.error(`${message.guild?.name} • Priority I Auto-moderator | Server settings not resolvable`);
+                            console.error(`${message.guild?.name} • Priority II Auto-moderator | Server settings not resolvable`);
                             break;
                     };
                 };
-                // Priority IIA
-            } else if (regexTestSwear) {
-                console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Detected swear word in message ${message.id}`);
+                // Priority III
+            } else if (regexTestSwear || regexTestSwearSuper) {
+                console.debug(`${message.guild?.name} • Priority III Auto-moderator | Detected swear word in message ${message.id}`);
 
                 if (message.member?.permissionsIn(message.channel).has(PermissionFlagsBits.ManageMessages)) {
-                    console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} is moderator.`);
+                    console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} is moderator.`);
                 } else if (system.automod.swearFilter.enabled) {
                     if (message.deletable) await message.delete();
+                    if (regexTestSwearSuper && system.automod.swearFilter.punishment < ModActionType.Ban) system.automod.swearFilter.punishment++;
 
                     switch (system.automod.swearFilter.punishment) {
                         case ModActionType.Warn:
                             //warn
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
                             break;
 
                         case ModActionType.Mute:
                             //mute
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
                             break;
 
                         case ModActionType.Timeout:
                             //timeout
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
                             break;
 
                         case ModActionType.Blacklist:
                             //blacklist
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
                             break;
 
                         case ModActionType.Softban:
                             //softban
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
                             break;
 
                         case ModActionType.Ban:
                             //ban
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
                             break;
 
                         case ModActionType.None:
-                            console.debug(`${message.guild?.name} • Priority IIA Auto-moderator | Swear filter punishment for guild ${message.guild?.id} disabled.`);
+                            console.debug(`${message.guild?.name} • Priority III Auto-moderator | Swear filter punishment for guild ${message.guild?.id} disabled.`);
                             break;
 
                         default:
-                            console.error(`${message.guild?.name} • Priority IIA Auto-moderator | Server settings not resolvable`);
+                            console.error(`${message.guild?.name} • Priority III Auto-moderator | Server settings not resolvable`);
                             break;
                     };
                 };
             }
-            // Priority IIB
-        } else if (regexTestSwear) {
-            console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Detected swear word in message ${message.id}`);
-
-            if (message.member?.permissionsIn(message.channel).has(PermissionFlagsBits.ManageMessages)) {
-                console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} is moderator.`);
-            } else if (system.automod.swearFilter.enabled) {
-                if (message.deletable) await message.delete();
-
-                switch (system.automod.swearFilter.punishment) {
-                    case ModActionType.Warn:
-                        //warn
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
-                        break;
-
-                    case ModActionType.Mute:
-                        //mute
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
-                        break;
-
-                    case ModActionType.Timeout:
-                        //timeout
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
-                        break;
-
-                    case ModActionType.Blacklist:
-                        //blacklist
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
-                        break;
-
-                    case ModActionType.Softban:
-                        //softban
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
-                        break;
-
-                    case ModActionType.Ban:
-                        //ban
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
-                        break;
-
-                    case ModActionType.None:
-                        console.debug(`${message.guild?.name} • Priority IIB Auto-moderator | Swear filter punishment for guild ${message.guild?.id} disabled.`);
-                        break;
-
-                    default:
-                        console.error(`${message.guild?.name} • Priority IIB Auto-moderator | Server settings not resolvable`);
-                        break;
-                };
-            };
-        };
+        }
     };
 };
 

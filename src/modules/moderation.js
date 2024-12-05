@@ -2,7 +2,6 @@ const Discord = require("discord.js");
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('node:fs');
-const mysql = require("mysql");
 
 const SysSettings = require("../settings.json");
 
