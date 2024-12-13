@@ -45,8 +45,8 @@ class MessageHandler {
             let regexPatternSwear = new RegExp(`\\b(${swearWords.join('|')})\\b`, 'i');
             let regexPatternSwearSuper = new RegExp(`\\b(${swearSuperWords.join('|')})\\b`, 'i');
 
-            const regexTestSwear = regexPatternSwear.test(msgCont);
-            const regexTestSwearSuper = regexPatternSwearSuper.test(msgCont);
+            const regexTestSwear = regexPatternSwear.test(msgCont) && swearWords.length > 0;
+            const regexTestSwearSuper = regexPatternSwearSuper.test(msgCont) && swearSuperWords.length > 0;
 
             // Priority I
             if (regexTestInvite) {
