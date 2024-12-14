@@ -8,6 +8,7 @@ const ServerHandler = require("./classes/handlers/UserHandler.js");
 const CommandCategory = require("./classes/enum/CommandCategory.js");
 const ModActionType = require("./classes/enum/ModActionType.js");
 const LogEventType = require("./classes/enum/LogEventType.js");
+const FilterClass = require("./classes/enum/FilterClass.js");
 const FilterMode = require("./classes/enum/FilterMode.js");
 
 module.exports = {
@@ -21,5 +22,6 @@ module.exports = {
     CommandCategory,
     ModActionType,
     LogEventType,
+    FilterClass,
     FilterMode,
 };

@@ -257,7 +257,8 @@ module.exports = {
                         name: "exclude",
                         value: FilterMode.Exclude,
                     },
-                ))),
+                )))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction The interaction for the slash command.

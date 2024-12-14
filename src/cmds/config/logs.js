@@ -108,7 +108,8 @@ module.exports = {
             .addBooleanOption((o) => o
                 .setName("enable")
                 .setDescription("Toggle detection of this action.")
-                .setRequired(true))),
+                .setRequired(true)))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction The interaction for the slash command.
