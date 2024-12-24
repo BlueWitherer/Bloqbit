@@ -73,7 +73,7 @@ module.exports = {
             var date = Date.now();
             const until = Math.floor((date / 1000) + (duration / 1000));
 
-            let type = string();
+            let type = "seconds";
 
             switch (interaction.options?.getNumber("time")) {
                 case (1000):

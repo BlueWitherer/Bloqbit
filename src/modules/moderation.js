@@ -1,14 +1,100 @@
 const Discord = require("discord.js");
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const fs = require('node:fs');
 
 const SysSettings = require("../settings.json");
 
-const fetch = require("./fetch.js");
 const resolve = require("./resolve.js");
+const { ModActionType } = require("../classes.js");
 
 module.exports = {
+    /**
+     * 
+     * @param {number} level Severity of punishment
+     * @param {Discord.GuildMember} member Server member to receive punishment
+     * @param {string} reason Reason behind punishment
+     * 
+     * @returns 
+     */
+    punish: async (level, member, reason) => {
+        if (level > ModActionType.Ban) level = ModActionType.Ban;
+
+        /**
+         * 
+         * @param {Discord.GuildMember} m Member to ban
+         * @param {string} r Reason for ban
+         */
+        const ban = async (m, r) => {
+            await m.ban({
+                "reason": r,
+                "deleteMessageSeconds": 7 * 86400,
+            });
+        };
+
+        /**
+         * 
+         * @param {Discord.GuildMember} m Member to softban
+         * @param {string} r Reason for softban
+         */
+        const softban = async (m, r) => {
+            const g = m.guild;
+
+            await m.ban({
+                "reason": r,
+                "deleteMessageSeconds": 7 * 86400,
+            });
+
+            await g.members.unban(m.user, r);
+        };
+
+        /**
+         * 
+         * @param {Discord.GuildMember} m Member to timeout
+         * @param {string} r Reason for timeout
+         */
+        const timeout = async (m, r) => {
+            await m.timeout(7 * 86400000, r);
+        };
+
+        switch (level) {
+            case ModActionType.Warn:
+                //warn
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} warned.`);
+                break;
+
+            case ModActionType.Mute:
+                //mute
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} muted.`);
+                break;
+
+            case ModActionType.Timeout:
+                await timeout(member, reason);
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} timed out.`);
+                break;
+
+            case ModActionType.Blacklist:
+                //blacklist
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} blacklisted.`);
+                break;
+
+            case ModActionType.Softban:
+                await softban(member, reason);
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} soft-banned.`);
+                break;
+
+            case ModActionType.Ban:
+                await ban(member, reason);
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Author ${message.author?.id} of message ${message.id} banned.`);
+                break;
+
+            case ModActionType.None:
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Link filter punishment for guild ${message.guild?.id} disabled.`);
+                break;
+
+            default:
+                console.error(`${message.guild?.name} • Priority II Auto-moderator | Server settings not resolvable`);
+                break;
+        };
+    },
+
     /**
      * 
      * @param {typeof SysSettings} system Server settings object
@@ -28,17 +114,17 @@ module.exports = {
                     } else if (blWordsExtra.some((v) => msg.content.includes(v))) {
                         return resolve.warnObj(auto.swearFilter.punishment + 1, resolve.msgWarning("Severe Blacklisted Words", "Used words included in the severe keyword blacklist."));
                     } else {
-                        return resolve.warnObj(0, resolve.msgWarning("Clear", "Message doesn't violate rule."));
+                        return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Message doesn't violate rule."));
                     };
                 } else {
-                    return resolve.warnObj(0, resolve.msgWarning("Clear", "Filter disabled."));
+                    return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Filter disabled."));
                 };
             } catch (err) {
                 console.error(err);
-                return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+                return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
             };
         } else {
-            return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+            return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
         };
     },
 
@@ -46,6 +132,8 @@ module.exports = {
      * 
      * @param {typeof SysSettings} system Server settings object
      * @param {Discord.Message} msg Discord message to inspect
+     * 
+     * @returns {{ punishment: number, warning: { name: string, value: string }}} Warning object
      */
     elFilter: (system, msg) => {
         if (system && msg) {
@@ -53,22 +141,22 @@ module.exports = {
                 const auto = system.automod;
 
                 if (auto.enabled && auto.linkFilter.enabled) {
-                    const urlRegex = /https?:\/\/[^\s]+/;
+                    const urlRegex = new RegExp("\\bhttps?:\\/\\/[^\\s/$.?#].[^\\s]*");
 
                     if (urlRegex.test(msg.content)) {
                         return resolve.warnObj(auto.swearFilter.punishment, resolve.msgWarning("External URL", "Posted an external URL with the message."));
                     } else {
-                        return resolve.warnObj(0, resolve.msgWarning("Clear", "Message doesn't violate rule."));
+                        return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Message doesn't violate rule."));
                     };
                 } else {
-                    return resolve.warnObj(0, resolve.msgWarning("Clear", "Filter disabled."));
+                    return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Filter disabled."));
                 };
             } catch (err) {
                 console.error(err);
-                return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+                return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
             };
         } else {
-            return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+            return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
         };
     },
 
@@ -83,22 +171,22 @@ module.exports = {
                 const auto = system.automod;
 
                 if (auto.enabled && auto.inviteFilter.enabled) {
-                    const inviteRegex = /discord\.gg\/[a-z0-9]+/i;
+                    const inviteRegex = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?(?:discord\\.gg\\/[a-zA-Z0-9]+|discord\\.com\\/invite\\/[a-zA-Z0-9]+)\\b", 'g');
 
                     if (inviteRegex.test(msg.content)) {
                         return resolve.warnObj(auto.swearFilter.punishment, resolve.msgWarning("Server Invite", "Posted a server invite with the message."));
                     } else {
-                        return resolve.warnObj(0, resolve.msgWarning("Clear", "Message doesn't violate rule."));
+                        return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Message doesn't violate rule."));
                     };
                 } else {
-                    return resolve.warnObj(0, resolve.msgWarning("Clear", "Filter disabled."));
+                    return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Filter disabled."));
                 };
             } catch (err) {
                 console.error(err);
-                return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+                return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
             };
         } else {
-            return resolve.warnObj(0, resolve.msgWarning("Clear", "Programming error."));
+            return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Programming error."));
         };
     },
 };

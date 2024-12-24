@@ -1,3 +1,4 @@
+const { Embed, EmbedBuilder } = require("discord.js");
 const cacheModule = require("../cache.js");
 const { ModActionType, FilterMode } = require("../classes.js");
 
@@ -138,13 +139,10 @@ module.exports = {
      * @param {string} description Description of the warning
      */
     msgWarning: (name, description) => {
-        name = string(name);
-        description = string(description);
-
         try {
             return {
-                name: string(name),
-                value: string(description),
+                name: name,
+                value: description,
             };
         } catch (err) {
             console.error(err);
