@@ -1,4 +1,4 @@
-const { ClientModel, BotDatabase, MessageHandler } = require("./classes.js");
+const { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler } = require("./classes.js");
 
 const Discord = require("discord.js");
 const { Routes } = require("discord-api-types/v9");
@@ -159,6 +159,18 @@ class StartClient {
                 process.exit(1);
             };
 
+            try {
+                console.debug("Starting handlers...");
+
+                new MessageHandler(client);
+                new ServerHandler(client);
+                new UserHandler(client);
+
+                console.debug("Handlers successfully started");
+            } catch (err) {
+                console.error(err);
+            };
+
             if (testMode) {
                 console.warn("Test mode active.");
                 console.debug("All bot start-up operations successful. No fatal errors detected. Logging off...");
@@ -170,28 +182,6 @@ class StartClient {
 
         await botModel.client?.login(botModel.token);
         return botModel;
-    };
-
-    /**
-     * 
-     * @param {Number} x 
-     * 
-     * @returns {string}
-     */
-    numberWithCommas(x) {
-        try {
-            if (Number.isSafeInteger(x)) {
-                const numString = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                console.debug(numString);
-                return numString;
-            } else {
-                console.error(`${x} is not a number.`);
-                return "0";
-            };
-        } catch (err) {
-            console.error(err);
-            return "0";
-        };
     };
 };
 

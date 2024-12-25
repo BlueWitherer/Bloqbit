@@ -266,4 +266,28 @@ module.exports = {
             return singular
         };
     },
+
+    
+
+    /**
+     * 
+     * @param {Number} x Number
+     * 
+     * @returns {string} String of number with thousand-digit commas
+     */
+    numberWithCommas: (x) => {
+        try {
+            if (Number.isSafeInteger(x)) {
+                const numString = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                console.debug(numString);
+                return numString;
+            } else {
+                console.error(`${x} is not a number.`);
+                return "0";
+            };
+        } catch (err) {
+            console.error(err);
+            return "0";
+        };
+    },
 };

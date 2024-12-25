@@ -1,5 +1,11 @@
+const { Client } = require("discord.js");
+
 class UserHandler {
-    constructor() {
+    /**
+     * 
+     * @param {Client} client Discord bot client.
+     */
+    constructor(client) {
         console.debug("Initiating global user handler...");
     };
 };

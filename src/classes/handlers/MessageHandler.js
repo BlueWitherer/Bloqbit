@@ -1,8 +1,6 @@
 const SysSettings = require("../../settings.json");
 const { Message, Client, PermissionsBitField, PermissionFlagsBits, Events } = require("discord.js");
-const ModActionType = require("../enum/ModActionType");
 const cache = require("../../cache");
-const resolve = require("../../modules/resolve");
 const moderation = require("../../modules/moderation");
 
 class MessageHandler {
@@ -17,6 +15,7 @@ class MessageHandler {
             const s = cache.fetch(m.guild?.id);
 
             if (s && m) {
+                console.debug(`Handling message of ID ${m.id}...`);
                 await this.messageSend(s, m);
             };
         });
@@ -32,7 +31,12 @@ class MessageHandler {
                 return;
             } else {
                 const inF = moderation.inFilter(system, message);
+                const liF = moderation.elFilter(system, message);
+                const blF = moderation.blFilter(system, message);
+
                 if (inF.punishment) return await moderation.punish(inF.punishment, message.member, inF.warning.value);
+                if (liF.punishment) return await moderation.punish(liF.punishment, message.member, liF.warning.value);
+                if (blF.punishment) return await moderation.punish(blF.punishment, message.member, blF.warning.value);
             };
         };
     };
