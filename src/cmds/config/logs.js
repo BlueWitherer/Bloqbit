@@ -174,7 +174,7 @@ module.exports = {
                     system.logs.actions.autoMod = toggle;
                     break;
 
-                case LogEventType.Moderator:
+                case LogEventType.MOD:
                     system.logs.actions.moderator = toggle;
                     break;
 

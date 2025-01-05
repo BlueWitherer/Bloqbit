@@ -2,8 +2,15 @@
  * @enum {number} Type of filtering.
  */
 class FilterMode {
-    static Include = 1;
-    static Exclude = 0;
+    static INCLUDE = 1;
+    static EXCLUDE = 0;
+
+    static values() {
+        return [
+            this.INCLUDE,
+            this.EXCLUDE,
+        ];
+    };
 };
 
 module.exports = FilterMode;

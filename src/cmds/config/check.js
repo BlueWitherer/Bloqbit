@@ -17,24 +17,24 @@ module.exports = {
             .setDescription("Filter to check.")
             .addChoices([
                 {
-                    name: "Swear Words",
-                    value: FilterClass.Swear,
+                    name: "SWEAR Words",
+                    value: FilterClass.SWEAR,
                 },
                 {
-                    name: "External Links",
-                    value: FilterClass.Link,
+                    name: "External URLs",
+                    value: FilterClass.URL,
                 },
                 {
                     name: "Server Invites",
-                    value: FilterClass.Invite,
+                    value: FilterClass.INV,
                 },
                 {
                     name: "Duplicate Text",
-                    value: FilterClass.DupeText,
+                    value: FilterClass.DUPETXT,
                 },
                 {
                     name: "Mass Mentions",
-                    value: FilterClass.MassMention,
+                    value: FilterClass.MASSPING,
                 },
             ])
             .setRequired(true))

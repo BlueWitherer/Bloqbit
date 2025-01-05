@@ -226,10 +226,10 @@ module.exports = {
      */
     filterMode: (mode) => {
         switch (mode) {
-            case FilterMode.Include:
+            case FilterMode.INCLUDE:
                 return "include";
 
-            case FilterMode.Exclude:
+            case FilterMode.EXCLUDE:
                 return "exclude";
 
             default:

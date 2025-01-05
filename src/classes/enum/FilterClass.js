@@ -2,11 +2,21 @@
  * @enum {string} Code name for the type of automated filter.
  */
 class FilterClass {
-    static Swear = "swearFilter";
-    static Link = "linkFilter";
-    static Invite = "inviteFilter";
-    static DupeText = "dupetextFilter";
-    static MassMention = "massmentionFilter";
+    static SWEAR = "swearFilter";
+    static URL = "linkFilter";
+    static INV = "inviteFilter";
+    static DUPETXT = "dupetextFilter";
+    static MASSPING = "massmentionFilter";
+
+    static values() {
+        return [
+            this.SWEAR,
+            this.URL,
+            this.INV,
+            this.DUPETXT,
+            this.MASSPING,
+        ];
+    };
 };
 
 module.exports = FilterClass;

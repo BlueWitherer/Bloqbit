@@ -86,7 +86,7 @@ module.exports = {
                 break;
 
             case ModActionType.None:
-                console.debug(`${message.guild?.name} • Priority II Auto-moderator | Link filter punishment for guild ${message.guild?.id} disabled.`);
+                console.debug(`${message.guild?.name} • Priority II Auto-moderator | URL filter punishment for guild ${message.guild?.id} disabled.`);
                 break;
 
             default:

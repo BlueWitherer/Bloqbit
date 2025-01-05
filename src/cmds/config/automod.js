@@ -92,11 +92,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: FilterMode.Include,
+                        value: FilterMode.INCLUDE,
                     },
                     {
                         name: "exclude",
-                        value: FilterMode.Exclude,
+                        value: FilterMode.EXCLUDE,
                     },
                 ))
             .addNumberOption((o) => o
@@ -105,11 +105,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: FilterMode.Include,
+                        value: FilterMode.INCLUDE,
                     },
                     {
                         name: "exclude",
-                        value: FilterMode.Exclude,
+                        value: FilterMode.EXCLUDE,
                     },
                 )))
         .addSubcommand((c) => c
@@ -251,11 +251,11 @@ module.exports = {
                 .addChoices(
                     {
                         name: "include",
-                        value: FilterMode.Include,
+                        value: FilterMode.INCLUDE,
                     },
                     {
                         name: "exclude",
-                        value: FilterMode.Exclude,
+                        value: FilterMode.EXCLUDE,
                     },
                 )))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),

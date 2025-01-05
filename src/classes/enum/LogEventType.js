@@ -20,6 +20,28 @@ class LogEventType {
     static RoleTake = "rolesUnassign";
     static ChannelCreate = "channelAdd";
     static ChannelDelete = "channelRem";
+
+    static values() {
+        return [
+            this.AutoModerator,
+            this.Moderator,
+            this.ServerInvites,
+            this.MemberJoin,
+            this.MemberLeave,
+            this.MemberTimeout,
+            this.MemberNickname,
+            this.MessageDelete,
+            this.MessageEdit,
+            this.MessagePin,
+            this.MessageBulkDelete,
+            this.RoleCreate,
+            this.RoleDelete,
+            this.RoleGive,
+            this.RoleTake,
+            this.ChannelCreate,
+            this.ChannelDelete,
+        ];
+    };
 };
 
 module.exports = LogEventType;
