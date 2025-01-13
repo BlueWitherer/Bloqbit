@@ -1,4 +1,4 @@
-import { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler  } from './classes.js';
+import { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler  } from './classes.mjs';
 
 import Discord from 'discord.js';
 import { Routes  } from 'discord-api-types/v9';
@@ -6,7 +6,7 @@ import { Routes  } from 'discord-api-types/v9';
 import fs from 'node:fs';
 import dotenv from 'dotenv';
 import path from 'path';
-import fetch from './modules/fetch.js';
+import fetch from './modules/fetch.mjs';
 
 dotenv.config();
 

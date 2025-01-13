@@ -1,6 +1,6 @@
 import ClientModel from '../classes/ClientModel.js';
 import { Events, Guild, ActivityType, PresenceUpdateStatus  } from 'discord.js';
-import fetch from '../modules/fetch.js';
+import fetch from '../modules/fetch.mjs';
 
 export default {
     name: Events.GuildDelete,

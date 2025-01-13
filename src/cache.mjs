@@ -1,5 +1,5 @@
 import MongoClient from 'mongodb';
-import BotDatabase from './classes.js';
+import BotDatabase from './classes.mjs';
 import SysSettings from './settings.json' with { type: 'json' };
 
 /**

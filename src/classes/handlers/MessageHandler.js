@@ -1,7 +1,7 @@
 import SysSettings from '../../settings.json' with { type: 'json' };
 import { Message, Client, PermissionsBitField, PermissionFlagsBits, Events  } from 'discord.js';
-import cache from '../../cache.js';
-import moderation from '../../modules/moderation.js';
+import cache from '../../cache.mjs';
+import moderation from '../../modules/moderation.mjs';
 
 export default class MessageHandler {
     /**

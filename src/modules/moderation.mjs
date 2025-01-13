@@ -2,9 +2,9 @@ import Discord from 'discord.js';
 
 import SysSettings from '../settings.json' with { type: 'json' };
 
-import resolve from './resolve.js';
+import resolve from './resolve.mjs';
 
-import { ModActionType  } from '../classes.js';
+import { ModActionType  } from '../classes.mjs';
 
 export default {
     /**

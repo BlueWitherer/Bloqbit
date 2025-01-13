@@ -1,10 +1,10 @@
 import SysAssets from '../../assets.json' with { type: 'json' };
 import SysSettings from '../../settings.json' with { type: 'json' };
-import { BotDatabase  } from '../../classes.js';
+import { BotDatabase  } from '../../classes.mjs';
 import { ChatInputCommandInteraction  } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { PermissionFlagsBits  } from 'discord-api-types/v10';
-import fetch from '../../modules/fetch.js';
+import fetch from '../../modules/fetch.mjs';
 
 export default {
     premium: true,

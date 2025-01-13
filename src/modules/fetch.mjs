@@ -1,6 +1,6 @@
-import cacheModule from '../cache.js';
+import cacheModule from '../cache.mjs';
 
-import { BotDatabase  } from '../classes.js';
+import { BotDatabase  } from '../classes.mjs';
 
 import { Interaction  } from 'discord.js';
 import Mongo from 'mongodb';
@@ -8,7 +8,7 @@ import Mongo from 'mongodb';
 import fs from 'node:fs';
 import path from 'path';
 
-import resolve from './resolve.js';
+import resolve from './resolve.mjs';
 import SysAssets from '../assets.json' with { type: 'json' };
 import SysSettings from '../settings.json' with { type: 'json' };
 

@@ -1,12 +1,12 @@
 import SysAssets from '../../assets.json' with { type: 'json' };
 import SysSettings from '../../settings.json' with { type: 'json' };
-import { BotDatabase, FilterMode, ModActionType } from '../../classes.js';
+import { BotDatabase, FilterMode, ModActionType } from '../../classes.mjs';
 import { ChatInputCommandInteraction, Role, BaseChannel } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
-import fetch from '../../modules/fetch.js';
-import resolve from '../../modules/resolve.js';
-import cache from '../../cache.js';
+import fetch from '../../modules/fetch.mjs';
+import resolve from '../../modules/resolve.mjs';
+import cache from '../../cache.mjs';
 
 export default {
     premium: true,

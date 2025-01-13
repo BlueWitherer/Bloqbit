@@ -25,6 +25,7 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
+    "start": "node start.js",
     "lint": "eslint .",
     "test": "node validate.js"
   },
@@ -39,5 +40,14 @@
     "fun",
     "discord",
     "bot"
-  ]
+  ],
+  "icon": "icon.ico",
+  "bugs": {
+    "email": "bloqbit@cubicstudios.xyz",
+    "url": "https://www.github.com/CubicCommunity/Bloqbit/issues/"
+  },
+  "contributors": [
+    "Cheeseworks"
+  ],
+  "homepage": "https://bloqbit.cubicstudios.xyz/"
 }

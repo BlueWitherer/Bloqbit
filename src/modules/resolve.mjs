@@ -1,6 +1,6 @@
 import { Embed, EmbedBuilder  } from 'discord.js';
-import cacheModule from '../cache.js';
-import { ModActionType, FilterMode  } from '../classes.js';
+import cacheModule from '../cache.mjs';
+import { ModActionType, FilterMode  } from '../classes.mjs';
 
 import SysSettings from '../settings.json' with { type: 'json' };
 
