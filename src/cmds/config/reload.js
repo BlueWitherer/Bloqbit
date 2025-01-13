@@ -3,7 +3,7 @@ import SysSettings from '../../settings.json' with { type: 'json' };
 import { BotDatabase  } from '../../classes.js';
 import { ChatInputCommandInteraction  } from 'discord.js';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10'';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10';
 import fetch from '../../modules/fetch.js';
 
 export default {

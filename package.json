@@ -1,8 +1,11 @@
 {
   "name": "bloqbit",
-  "version": "1.0.0",
   "description": "The all-in-one solution for your Discord server.",
+  "version": "1.0.0",
+  "author": "Cubic Studios",
+  "license": "ISC",
   "type": "module",
+  "nodeVersion": "23.1.0",
   "dependencies": {
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
@@ -36,8 +39,5 @@
     "fun",
     "discord",
     "bot"
-  ],
-  "author": "Cubic Studios",
-  "license": "ISC",
-  "nodeVersion": "23.1.0"
+  ]
 }
