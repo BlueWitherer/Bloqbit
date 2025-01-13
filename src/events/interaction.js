@@ -1,9 +1,9 @@
 import ClientModel from '../classes/ClientModel.js';
 const { Interaction } = require("discord.js")
-const { Events, WebhookClient } = require("discord.js");
+import { Events, WebhookClient  } from 'discord.js';
 import fetch from '../modules/fetch.js';
 
-module.exports = {
+export default {
     name: Events.InteractionCreate,
     once: false,
     /**

@@ -1,9 +1,9 @@
-import SysSettings from '../../settings.json' assert { type: 'json' };
-const { Message, Client, PermissionsBitField, PermissionFlagsBits, Events } = require("discord.js");
-import cache from '../../cache';
-import moderation from '../../modules/moderation';
+import SysSettings from '../../settings.json' with { type: 'json' };
+import { Message, Client, PermissionsBitField, PermissionFlagsBits, Events  } from 'discord.js';
+import cache from '../../cache.js';
+import moderation from '../../modules/moderation.js';
 
-class MessageHandler {
+export default class MessageHandler {
     /**
      * 
      * @param {Client} client Discord bot client.
@@ -41,5 +41,3 @@ class MessageHandler {
         };
     };
 };
-
-module.exports = MessageHandler;

@@ -1,6 +1,6 @@
-const { Client } = require("discord.js");
+import { Client  } from 'discord.js';
 
-class UserHandler {
+export default class UserHandler {
     /**
      * 
      * @param {Client} client Discord bot client.
@@ -9,5 +9,3 @@ class UserHandler {
         console.debug("Initiating global user handler...");
     };
 };
-
-module.exports = UserHandler;

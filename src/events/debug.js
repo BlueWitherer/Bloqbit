@@ -1,7 +1,7 @@
 import ClientModel from '../classes/ClientModel.js';
-const { Events, WebhookClient } = require("discord.js");
+import { Events, WebhookClient  } from 'discord.js';
 
-module.exports = {
+export default {
     name: Events.Debug,
     once: false,
     /**

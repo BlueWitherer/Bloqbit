@@ -11,7 +11,7 @@ import LogEventType from './classes/enum/LogEventType.mjs';
 import FilterClass from './classes/enum/FilterClass.mjs';
 import FilterMode from './classes/enum/FilterMode.mjs';
 
-module.exports = {
+export default {
     ClientModel,
     BotDatabase,
 

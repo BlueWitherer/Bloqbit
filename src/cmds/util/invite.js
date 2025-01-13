@@ -1,11 +1,11 @@
-import SysAssets from '../../assets.json' assert { type: 'json' };
-import SysSettings from '../../settings.json' assert { type: 'json' };
-const { BotDatabase } = require("../../classes.js");
-const { ChatInputCommandInteraction, Invite } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
+import SysAssets from '../../assets.json' with { type: 'json' };
+import SysSettings from '../../settings.json' with { type: 'json' };
+import { BotDatabase  } from '../../classes.js';
+import { ChatInputCommandInteraction, Invite  } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10'';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("invite")
         .setDescription("Create a permanent invite for this server.")

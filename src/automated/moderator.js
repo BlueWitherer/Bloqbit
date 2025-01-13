@@ -1,7 +1,7 @@
-const { Message } = require("discord.js");
-import SysSettings from '../settings.json' assert { type: 'json' };
+import { Message  } from 'discord.js';
+import SysSettings from '../settings.json' with { type: 'json' };
 
-class Moderator {
+export default class Moderator {
     /**
      * @returns {Moderator}
      */
@@ -44,5 +44,3 @@ class Moderator {
         };
     };
 };
-
-module.exports = Moderator;

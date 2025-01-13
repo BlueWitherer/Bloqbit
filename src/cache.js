@@ -1,13 +1,13 @@
-const { MongoClient } = require("mongodb");
-const { BotDatabase } = require("./classes");
-import SysSettings from './settings.json' assert { type: 'json' };
+import MongoClient from 'mongodb';
+import BotDatabase from './classes.js';
+import SysSettings from './settings.json' with { type: 'json' };
 
 /**
  * @type {[typeof SysSettings]} Array of cache server settings
  */
 const cache = [];
 
-module.exports = {
+export default {
     /**
      * 
      * @returns {[typeof SysSettings]} Array of cache server settings

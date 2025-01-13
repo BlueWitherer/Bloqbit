@@ -1,18 +1,18 @@
 import cacheModule from '../cache.js';
 
-const { BotDatabase } = require("../classes.js");
+import { BotDatabase  } from '../classes.js';
 
-const { Interaction } = require("discord.js");
+import { Interaction  } from 'discord.js';
 import Mongo from 'mongodb';
 
 import fs from 'node:fs';
 import path from 'path';
 
 import resolve from './resolve.js';
-import SysAssets from '../assets.json' assert { type: 'json' };
-import SysSettings from '../settings.json' assert { type: 'json' };
+import SysAssets from '../assets.json' with { type: 'json' };
+import SysSettings from '../settings.json' with { type: 'json' };
 
-module.exports = {
+export default {
     /**
      * 
      * @param {string} err Error message

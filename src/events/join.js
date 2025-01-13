@@ -1,8 +1,8 @@
 import ClientModel from '../classes/ClientModel.js';
-const { Events, Guild, WebhookClient } = require("discord.js");
+import { Events, Guild, WebhookClient  } from 'discord.js';
 import fetch from '../modules/fetch.js';
 
-module.exports = {
+export default {
     name: Events.GuildCreate,
     once: false,
     /**

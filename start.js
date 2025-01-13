@@ -10,7 +10,7 @@ console.log('Starting up system...');
 
 import dotenv from 'dotenv';
 
-const { ClientModel } = require("./src/classes.js");
+import { ClientModel } from './src/classes.js';
 import StartClient from './src/index.js';
 
 dotenv.config();

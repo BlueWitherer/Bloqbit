@@ -1,9 +1,9 @@
 import Moderator from '../automated/moderator.js';
 import cache from '../cache.js';
 import ClientModel from '../classes/ClientModel.js';
-const { Events, Message, ChannelType, WebhookClient } = require("discord.js");
+import { Events, Message, ChannelType, WebhookClient  } from 'discord.js';
 
-module.exports = {
+export default {
     name: Events.MessageCreate,
     once: false,
     /**

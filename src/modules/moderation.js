@@ -1,12 +1,12 @@
 import Discord from 'discord.js';
 
-import SysSettings from '../settings.json' assert { type: 'json' };
+import SysSettings from '../settings.json' with { type: 'json' };
 
 import resolve from './resolve.js';
 
-const { ModActionType } = require("../classes.js");
+import { ModActionType  } from '../classes.js';
 
-module.exports = {
+export default {
     /**
      * 
      * @param {number} level Severity of punishment

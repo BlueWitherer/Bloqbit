@@ -1,12 +1,12 @@
-import SysAssets from '../../assets.json' assert { type: 'json' };
-import SysSettings from '../../settings.json' assert { type: 'json' };
-const { BotDatabase } = require("../../classes.js");
-const { ChatInputCommandInteraction } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
+import SysAssets from '../../assets.json' with { type: 'json' };
+import SysSettings from '../../settings.json' with { type: 'json' };
+import { BotDatabase  } from '../../classes.js';
+import { ChatInputCommandInteraction  } from 'discord.js';
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { ChannelType, PermissionFlagsBits } from 'discord-api-types/v10'';
 import fetch from '../../modules/fetch.js';
 
-module.exports = {
+export default {
     data: new SlashCommandBuilder()
         .setName("reload")
         .setDescription("Refresh the server's save data.")

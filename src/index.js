@@ -1,7 +1,7 @@
-const { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler } = require("./classes.js");
+import { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler  } from './classes.js';
 
 import Discord from 'discord.js';
-const { Routes } = require("discord-api-types/v9");
+import { Routes  } from 'discord-api-types/v9';
 
 import fs from 'node:fs';
 import dotenv from 'dotenv';
@@ -10,7 +10,7 @@ import fetch from './modules/fetch.js';
 
 dotenv.config();
 
-class StartClient {
+export default class StartClient {
     /**
      * 
      * @returns {ClientModel}
@@ -184,5 +184,3 @@ class StartClient {
         return botModel;
     };
 };
-
-module.exports = StartClient;

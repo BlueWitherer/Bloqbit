@@ -1,17 +1,17 @@
-import SysAssets from '../assets.json' assert { type: 'json' };
+import SysAssets from '../assets.json' with { type: 'json' };
 
 import dotenv from 'dotenv';
 
-const { Client, Collection, IntentsBitField, Partials } = require("discord.js");
-const { REST } = require("@discordjs/rest");
-import BotDatabase from './BotDatabase';
+import { Client, Collection, IntentsBitField, Partials  } from 'discord.js';
+import { REST  } from '@discordjs/rest';
+import BotDatabase from './BotDatabase.js';
 
 dotenv.config();
 
 /**
  * @class Bot model.
  */
-class ClientModel {
+export default class ClientModel {
     constructor() {
         this.online = false;
 
@@ -60,5 +60,3 @@ class ClientModel {
         return this;
     };
 };
-
-module.exports = ClientModel;

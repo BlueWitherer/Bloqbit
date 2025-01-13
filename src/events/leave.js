@@ -1,8 +1,8 @@
 import ClientModel from '../classes/ClientModel.js';
-const { Events, Guild, ActivityType, PresenceUpdateStatus } = require("discord.js");
+import { Events, Guild, ActivityType, PresenceUpdateStatus  } from 'discord.js';
 import fetch from '../modules/fetch.js';
 
-module.exports = {
+export default {
     name: Events.GuildDelete,
     once: false,
     /**
