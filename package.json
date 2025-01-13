@@ -2,6 +2,7 @@
   "name": "bloqbit",
   "version": "1.0.0",
   "description": "The all-in-one solution for your Discord server.",
+  "type": "module",
   "dependencies": {
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",

@@ -1,7 +1,7 @@
-const ClientModel = require("../classes/ClientModel.js");
+import ClientModel from '../classes/ClientModel.js';
 const { Interaction } = require("discord.js")
 const { Events, WebhookClient } = require("discord.js");
-const fetch = require("../modules/fetch.js");
+import fetch from '../modules/fetch.js';
 
 module.exports = {
     name: Events.InteractionCreate,

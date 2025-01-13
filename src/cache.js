@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 const { BotDatabase } = require("./classes");
-const SysSettings = require("./settings.json");
+import SysSettings from './settings.json' assert { type: 'json' };
 
 /**
  * @type {[typeof SysSettings]} Array of cache server settings

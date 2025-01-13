@@ -1,7 +1,7 @@
 /**
  * @enum {string} Code name of the bot command category.
  */
-class CommandCategory {
+export default class CommandCategory {
     static CONFIG = "config";
     static MOD = "moderator";
     static UTIL = "util";
@@ -16,5 +16,3 @@ class CommandCategory {
         ];
     };
 };
-
-module.exports = CommandCategory;

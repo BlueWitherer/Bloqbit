@@ -1,7 +1,7 @@
 /**
  * @enum {string} Code name for the type of automated filter.
  */
-class FilterClass {
+export default class FilterClass {
     static SWEAR = "swearFilter";
     static URL = "linkFilter";
     static INV = "inviteFilter";
@@ -18,5 +18,3 @@ class FilterClass {
         ];
     };
 };
-
-module.exports = FilterClass;

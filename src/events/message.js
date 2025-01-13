@@ -1,6 +1,6 @@
-const Moderator = require("../automated/moderator.js");
-const cache = require("../cache.js");
-const ClientModel = require("../classes/ClientModel.js");
+import Moderator from '../automated/moderator.js';
+import cache from '../cache.js';
+import ClientModel from '../classes/ClientModel.js';
 const { Events, Message, ChannelType, WebhookClient } = require("discord.js");
 
 module.exports = {

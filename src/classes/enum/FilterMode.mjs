@@ -1,7 +1,7 @@
 /**
  * @enum {number} Type of filtering.
  */
-class FilterMode {
+export default class FilterMode {
     static INCLUDE = 1;
     static EXCLUDE = 0;
 
@@ -12,5 +12,3 @@ class FilterMode {
         ];
     };
 };
-
-module.exports = FilterMode;

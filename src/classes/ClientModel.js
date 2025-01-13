@@ -1,13 +1,10 @@
-const SysAssets = require("../assets.json");
-const SysSettings = require("../settings.json");
+import SysAssets from '../assets.json' assert { type: 'json' };
 
-const dotenv = require("dotenv");
-const path = require("path");
+import dotenv from 'dotenv';
 
 const { Client, Collection, IntentsBitField, Partials } = require("discord.js");
 const { REST } = require("@discordjs/rest");
-const { MongoClient } = require("mongodb");
-const BotDatabase = require("./BotDatabase");
+import BotDatabase from './BotDatabase';
 
 dotenv.config();
 

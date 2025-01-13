@@ -1,10 +1,10 @@
-const SysAssets = require("../../assets.json");
-const SysSettings = require("../../settings.json");
+import SysAssets from '../../assets.json' assert { type: 'json' };
+import SysSettings from '../../settings.json' assert { type: 'json' };
 const { BotDatabase, LogEventType } = require("../../classes.js");
 const { ChatInputCommandInteraction } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
-const fetch = require("../../modules/fetch.js");
+import fetch from '../../modules/fetch.js';
 
 module.exports = {
     premium: false,

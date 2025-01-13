@@ -1,15 +1,15 @@
-const ClientModel = require("./classes/ClientModel.js");
-const BotDatabase = require("./classes/BotDatabase.js");
+import ClientModel from './classes/ClientModel.js';
+import BotDatabase from './classes/BotDatabase.js';
 
-const MessageHandler = require("./classes/handlers/MessageHandler.js");
-const UserHandler = require("./classes/handlers/ServerHandler.js");
-const ServerHandler = require("./classes/handlers/UserHandler.js");
+import MessageHandler from './classes/handlers/MessageHandler.js';
+import UserHandler from './classes/handlers/ServerHandler.js';
+import ServerHandler from './classes/handlers/UserHandler.js';
 
-const CommandCategory = require("./classes/enum/CommandCategory.js");
-const ModActionType = require("./classes/enum/ModActionType.js");
-const LogEventType = require("./classes/enum/LogEventType.js");
-const FilterClass = require("./classes/enum/FilterClass.js");
-const FilterMode = require("./classes/enum/FilterMode.js");
+import CommandCategory from './classes/enum/CommandCategory.mjs';
+import ModActionType from './classes/enum/ModActionType.mjs';
+import LogEventType from './classes/enum/LogEventType.mjs';
+import FilterClass from './classes/enum/FilterClass.mjs';
+import FilterMode from './classes/enum/FilterMode.mjs';
 
 module.exports = {
     ClientModel,

@@ -1,12 +1,12 @@
 const { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler } = require("./classes.js");
 
-const Discord = require("discord.js");
+import Discord from 'discord.js';
 const { Routes } = require("discord-api-types/v9");
 
-const fs = require("node:fs");
-const dotenv = require("dotenv");
-const path = require("path");
-const fetch = require("./modules/fetch.js");
+import fs from 'node:fs';
+import dotenv from 'dotenv';
+import path from 'path';
+import fetch from './modules/fetch.js';
 
 dotenv.config();
 

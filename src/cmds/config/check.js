@@ -1,12 +1,12 @@
-const SysAssets = require("../../assets.json");
-const SysSettings = require("../../settings.json");
+import SysAssets from '../../assets.json' assert { type: 'json' };
+import SysSettings from '../../settings.json' assert { type: 'json' };
 const { BotDatabase, FilterMode, ModActionType, FilterClass } = require("../../classes.js");
 const { ChatInputCommandInteraction, Role, BaseChannel } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { ChannelType, PermissionFlagsBits } = require('discord-api-types/v10');
-const fetch = require("../../modules/fetch.js");
-const resolve = require("../../modules/resolve.js");
-const cache = require("../../cache.js");
+import fetch from '../../modules/fetch.js';
+import resolve from '../../modules/resolve.js';
+import cache from '../../cache.js';
 
 module.exports = {
     data: new SlashCommandBuilder()

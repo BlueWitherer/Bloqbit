@@ -1,5 +1,5 @@
 const { Message } = require("discord.js");
-const SysSettings = require("../settings.json");
+import SysSettings from '../settings.json' assert { type: 'json' };
 
 class Moderator {
     /**

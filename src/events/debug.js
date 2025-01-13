@@ -1,4 +1,4 @@
-const ClientModel = require("../classes/ClientModel.js");
+import ClientModel from '../classes/ClientModel.js';
 const { Events, WebhookClient } = require("discord.js");
 
 module.exports = {

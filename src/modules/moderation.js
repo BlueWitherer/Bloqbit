@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
+import Discord from 'discord.js';
 
-const SysSettings = require("../settings.json");
+import SysSettings from '../settings.json' assert { type: 'json' };
 
-const resolve = require("./resolve.js");
+import resolve from './resolve.js';
+
 const { ModActionType } = require("../classes.js");
 
 module.exports = {
@@ -144,7 +145,7 @@ module.exports = {
                     const urlRegex = new RegExp("\\bhttps?:\\/\\/[^\\s/$.?#].[^\\s]*");
 
                     if (urlRegex.test(msg.content)) {
-                        return resolve.warnObj(auto.swearFilter.punishment, resolve.msgWarning("External URL", "Posted an external URL with the message."));
+                        return resolve.warnObj(auto.linkFilter.punishment, resolve.msgWarning("External URL", "Posted an external URL with the message."));
                     } else {
                         return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Message doesn't violate rule."));
                     };
@@ -169,12 +170,15 @@ module.exports = {
         if (system && msg) {
             try {
                 const auto = system.automod;
+                console.debug(`Invite filter: ${ModActionType}`);
+                console.debug(`Invite filter: ${FilterClass}`);
+                console.debug(`Invite filter: ${CommandCategory}`);
 
                 if (auto.enabled && auto.inviteFilter.enabled) {
                     const inviteRegex = new RegExp("\\b(?:https?:\\/\\/)?(?:www\\.)?(?:discord\\.gg\\/[a-zA-Z0-9]+|discord\\.com\\/invite\\/[a-zA-Z0-9]+)\\b", 'g');
 
                     if (inviteRegex.test(msg.content)) {
-                        return resolve.warnObj(auto.swearFilter.punishment, resolve.msgWarning("Server Invite", "Posted a server invite with the message."));
+                        return resolve.warnObj(auto.inviteFilter.punishment, resolve.msgWarning("Server Invite", "Posted a server invite with the message."));
                     } else {
                         return resolve.warnObj(ModActionType.None, resolve.msgWarning("Clear", "Message doesn't violate rule."));
                     };

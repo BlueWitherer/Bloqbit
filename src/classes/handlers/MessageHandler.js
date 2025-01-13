@@ -1,7 +1,7 @@
-const SysSettings = require("../../settings.json");
+import SysSettings from '../../settings.json' assert { type: 'json' };
 const { Message, Client, PermissionsBitField, PermissionFlagsBits, Events } = require("discord.js");
-const cache = require("../../cache");
-const moderation = require("../../modules/moderation");
+import cache from '../../cache';
+import moderation from '../../modules/moderation';
 
 class MessageHandler {
     /**

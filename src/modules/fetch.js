@@ -1,16 +1,16 @@
-const cacheModule = require("../cache.js");
+import cacheModule from '../cache.js';
 
 const { BotDatabase } = require("../classes.js");
 
 const { Interaction } = require("discord.js");
-const Mongo = require("mongodb");
+import Mongo from 'mongodb';
 
-const fs = require("node:fs");
-const path = require("path");
+import fs from 'node:fs';
+import path from 'path';
 
-const resolve = require('./resolve.js');
-const SysAssets = require("../assets.json");
-const SysSettings = require("../settings.json");
+import resolve from './resolve.js';
+import SysAssets from '../assets.json' assert { type: 'json' };
+import SysSettings from '../settings.json' assert { type: 'json' };
 
 module.exports = {
     /**

@@ -1,5 +1,5 @@
-const SysAssets = require("../../assets.json");
-const SysSettings = require("../../settings.json");
+import SysAssets from '../../assets.json' assert { type: 'json' };
+import SysSettings from '../../settings.json' assert { type: 'json' };
 const { BotDatabase } = require("../../classes.js");
 const { ChatInputCommandInteraction, Invite } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
