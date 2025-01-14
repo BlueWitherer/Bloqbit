@@ -2,7 +2,7 @@
 The all-in-one solution for your Discord server.
 
 ### Features
-- Automated systems
+- Vast automation
 - Moderation tools
 - Games
 
@@ -12,4 +12,4 @@ The all-in-one solution for your Discord server.
 
 ### Changelog
 ###### What's new?!
-**[View the latest updates and patches](changelog.md)**
+**[📜 View the latest updates and patches](changelog.md)**
