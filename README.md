@@ -13,3 +13,7 @@ The all-in-one solution for your Discord server.
 ### Changelog
 ###### What's new?!
 **[📜 View the latest updates and patches](changelog.md)**
+
+### Issues
+###### What's wrong?!
+**[⚠️ Report a problem with the mod](../../issues/)**
