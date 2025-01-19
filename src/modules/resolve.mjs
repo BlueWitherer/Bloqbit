@@ -1,4 +1,3 @@
-import { Embed, EmbedBuilder  } from 'discord.js';
 import cacheModule from '../cache.mjs';
 import { ModActionType, FilterMode  } from '../classes.mjs';
 

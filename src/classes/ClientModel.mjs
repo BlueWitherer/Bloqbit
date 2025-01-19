@@ -32,7 +32,7 @@ export default class ClientModel {
 
         this.client = new Client({
             intents: [
-                IntentsBitField.Flags.GuildEmojisAndStickers,
+                IntentsBitField.Flags.GuildExpressions,
                 IntentsBitField.Flags.GuildPresences,
                 IntentsBitField.Flags.GuildVoiceStates,
                 IntentsBitField.Flags.GuildIntegrations,

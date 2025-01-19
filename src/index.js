@@ -1,7 +1,7 @@
-import { ClientModel, BotDatabase, MessageHandler, ServerHandler, UserHandler  } from './classes.mjs';
+import { ClientModel, MessageHandler, ServerHandler, UserHandler } from './classes.mjs';
 
 import Discord from 'discord.js';
-import { Routes  } from 'discord-api-types/v9';
+import { Routes } from 'discord-api-types/v9';
 
 import fs from 'node:fs';
 import dotenv from 'dotenv';
